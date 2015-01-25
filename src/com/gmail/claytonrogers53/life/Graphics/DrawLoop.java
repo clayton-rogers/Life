@@ -4,6 +4,7 @@ import com.gmail.claytonrogers53.life.Configuration.ConfigFormatException;
 import com.gmail.claytonrogers53.life.Configuration.Configuration;
 import com.gmail.claytonrogers53.life.Configuration.ValueNotConfiguredException;
 import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Physics.Vector2D;
 
 import javax.swing.*;
 import java.awt.*;
@@ -201,7 +202,10 @@ public final class DrawLoop extends JFrame implements Runnable{
                     af.scale(drawing.spriteZoom, drawing.spriteZoom);
                     af.rotate(drawing.rotation);
 
-                    // TODO-BUG: Rotation is around top left corner rather than the center of the object.
+                    // This translate is to account for the fact that the drawing of the sprite is done from the top
+                    // left corner, rather than the center. Since we want the rotation to be around the center, but
+                    // then we must move the cursor to the corner before we start drawing.
+                    af.translate(-drawing.sprite.getWidth(null)/2, -drawing.sprite.getHeight(null)/2);
 
                     g2.drawImage(drawing.sprite, af, null);
                 }
@@ -249,9 +253,8 @@ public final class DrawLoop extends JFrame implements Runnable{
         // translate the zoom of the sprite to the zoom of the screen.
         inputDrawing.spriteZoom *= zoom;
 
-        // Translate the coordinates for the distance from the centre to the top corner of the sprite.
-        inputDrawing.xPosition -= inputDrawing.sprite.getWidth(null)  *inputDrawing.spriteZoom /2.0;
-        inputDrawing.yPosition -= inputDrawing.sprite.getHeight(null) *inputDrawing.spriteZoom /2.0;
+        // At the end of this method, the x and y pos of the drawing will be in screen pixel coordinates.
+        // The spriteZoom will be that actual scaling of the sprite from sprite pixels to screen pixels.
     }
 
     /**
