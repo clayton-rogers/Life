@@ -51,6 +51,8 @@ public final class DrawLoop extends JFrame implements Runnable{
     private double              panX          = DEFAULT_PAN_X;
     private double              panY          = DEFAULT_PAN_Y;
     private volatile boolean    isDrawing     = true;
+    private long                frameTime     = 0;
+    private double              gLoad         = 0.0;
 
     /** The list of objects that will be drawn every loop */
     private final List<Drawable> drawableList = new ArrayList<>();
@@ -133,7 +135,7 @@ public final class DrawLoop extends JFrame implements Runnable{
     private void graphicsLoop () {
 
         long endOfLastLoopTime = System.currentTimeMillis();
-        long timeToWait;
+        long timeToWait = 0;
 
         while (isDrawing) {
             drawScreen();
@@ -157,6 +159,10 @@ public final class DrawLoop extends JFrame implements Runnable{
                 stopDrawing();
             }
             endOfLastLoopTime = System.currentTimeMillis();
+
+            // Record the fame time and load so that it can be displayed on the next frame
+            frameTime = (draw_dt-timeToWait);
+            gLoad = frameTime/((double)draw_dt) * 100;
         }
     }
 
@@ -206,6 +212,9 @@ public final class DrawLoop extends JFrame implements Runnable{
                     g2.drawImage(drawing.sprite, af, null);
                 }
             }
+
+            g.drawString("Frame Time: " + frameTime + " ms", 10, 45);
+            g.drawString("G Load: " + (int)gLoad + " %", 10, 60);
         } finally {
             if (g != null) {
                 g.dispose();

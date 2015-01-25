@@ -3,6 +3,7 @@ package com.gmail.claytonrogers53.life.Configuration;
 import com.gmail.claytonrogers53.life.Log.Log;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
 import java.nio.file.Path;
@@ -150,7 +151,7 @@ public final class Configuration {
 
         Path filePath = Paths.get(filename);
         try {
-            configFileContents = Files.readAllLines(filePath);
+            configFileContents = Files.readAllLines(filePath, Charset.defaultCharset());
         } catch (NoSuchFileException e) {
             Log.warning("The configuration file " + filename + " was not found. No configuration settings will be read.");
             return;
