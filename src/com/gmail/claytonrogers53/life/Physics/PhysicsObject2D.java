@@ -63,17 +63,14 @@ public abstract class PhysicsObject2D {
 
         // Linear motion
         // TODO-IMPROVEMENT: see if there is a better way of doing the following.
-        Vector2D.getSumOfVectors(forces, totalForce);
-        acceleration.set(totalForce);
-        acceleration.scalarDivide(mass);
+        totalForce = Vector2D.getSumOfVectors(forces);
+        acceleration = totalForce.scalarDivide(mass);
 
-        deltaVelocity.set(acceleration);
-        deltaVelocity.scalarMultiply(deltaT);
-        velocity.add(deltaVelocity);
+        deltaVelocity = acceleration.scalarMultiply(deltaT);
+        velocity = velocity.add(deltaVelocity);
 
-        deltaPosition.set(velocity);
-        deltaPosition.scalarMultiply(deltaT);
-        position.add(deltaPosition);
+        deltaPosition = velocity.scalarMultiply(deltaT);
+        position = position.add(deltaPosition);
 
         // The physics object is responsible for adding the forces and moments every loop,
         // so the current forces and moments are cleared.
@@ -88,6 +85,7 @@ public abstract class PhysicsObject2D {
         angularVelocity += angularAcceleration * deltaT;
         angle += angularVelocity * deltaT;
 
+        // Clear the moments too.
         moments.clear();
     }
 
