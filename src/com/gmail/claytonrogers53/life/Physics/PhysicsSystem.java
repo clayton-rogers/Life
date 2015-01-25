@@ -32,7 +32,7 @@ public final class PhysicsSystem implements Runnable {
     private volatile boolean    isPhysicsRunning   = true;
     private volatile boolean    isPaused           = false;
     /** The list of physics objects that will be calculated every loop */
-    private final Collection<PhysicsObject2D> physicsList = new ArrayList<>();
+    private final Collection<PhysicsThing> physicsList = new ArrayList<>();
 
     /**
      * Constructs a new physics systems object. The physics system reference should then be given to a new Thread
@@ -111,7 +111,7 @@ public final class PhysicsSystem implements Runnable {
                     // "this" for the entire physics time.
                     localPhysics_dt = physics_dt;
                 }
-                for (PhysicsObject2D po : physicsList) {
+                for (PhysicsThing po : physicsList) {
                     po.stepPhysics(localPhysics_dt * PhysicsSystem.MILLISECOND_TO_SECOND);  // physics works with seconds
                 }
             }
@@ -171,7 +171,7 @@ public final class PhysicsSystem implements Runnable {
      * @see #removeFromPhysicsList
      * @see #clearPhysicsList
      */
-    public void addToPhysicsList (PhysicsObject2D object) {
+    public void addToPhysicsList (PhysicsThing object) {
         if (null == object) {
             Log.error("Attempted to add a null object to the physics list.");
             return;
@@ -195,7 +195,7 @@ public final class PhysicsSystem implements Runnable {
      *
      * @see #clearPhysicsList
      */
-    public void removeFromPhysicsList (PhysicsObject2D object) {
+    public void removeFromPhysicsList (PhysicsThing object) {
         if (null == object) {
             Log.error("Attempted to remove a null object from the physics list.");
             return;

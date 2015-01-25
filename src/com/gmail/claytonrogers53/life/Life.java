@@ -34,7 +34,7 @@ public class Life {
         physicsThread.start();
         drawingThread.start();
 
-        Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0));
+        Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
         drawLoop.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 

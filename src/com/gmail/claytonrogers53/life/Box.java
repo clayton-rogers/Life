@@ -18,8 +18,8 @@ public class Box extends PhysicsObject2D implements Drawable {
     protected Drawing drawing = new Drawing();
     protected BufferedImage sprite;
 
-    public Box(double mass, double momentOfInertia, Vector2D position, Vector2D velocity) {
-        super(mass, momentOfInertia, position, velocity);
+    public Box(double mass, double momentOfInertia, Vector2D position, Vector2D velocity, double angle, double angularVelocity) {
+        super(mass, momentOfInertia, position, velocity, angle, angularVelocity);
 
         sprite = new BufferedImage(20, 20,BufferedImage.TYPE_INT_RGB);
         Graphics2D g = sprite.createGraphics();

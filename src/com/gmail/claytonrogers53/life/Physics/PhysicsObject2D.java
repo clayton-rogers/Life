@@ -4,25 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * The basics 2D physics object from which implements all the standard physics code.
+ * The basics 2D physics object from which implements all the standard physics code. Takes the physicsPoint and adds
+ * angular properties and angular property propagation.
  *
  * Created by Clayton on 13/11/2014.
  */
-public abstract class PhysicsObject2D {
+public abstract class PhysicsObject2D extends PhysicsPoint2D {
 
-    protected Vector2D position = new Vector2D();
-    protected Vector2D deltaPosition = new Vector2D();
-    protected Vector2D velocity = new Vector2D();
-    protected Vector2D deltaVelocity = new Vector2D();
-    protected Vector2D acceleration = new Vector2D();
     protected double angle;
     protected double angularVelocity;
     protected double angularAcceleration;
 
-    protected double mass;
     protected double momentOfInertia;
 
-    protected List<Vector2D> forces = new ArrayList<>();
     protected List<Double> moments = new ArrayList<>();
 
     /**
@@ -39,12 +33,20 @@ public abstract class PhysicsObject2D {
      *
      * @param velocity
      *        The initial velocity vector of the object in m/s.
+     *
+     * @param angle
+     *        The initial rotation angle of the object in rad, clockwise from North.
+     *
+     * @param angularVelocity
+     *        The initial angular velocity of the object in rad/s, positive is clockwise.
      */
-    public PhysicsObject2D(double mass, double momentOfInertia, Vector2D position, Vector2D velocity) {
-        this.mass = mass;
-        this.momentOfInertia = momentOfInertia;
-        this.position = new Vector2D(position);
-        this.velocity = new Vector2D(velocity);
+    public PhysicsObject2D(double mass, double momentOfInertia, Vector2D position, Vector2D velocity, double angle, double angularVelocity) {
+        super(mass, position, velocity);
+
+        this.momentOfInertia     = momentOfInertia;
+        this.angle               = angle;
+        this.angularVelocity     = angularVelocity;
+        this.angularAcceleration = 0.0;
     }
 
     /**
@@ -53,31 +55,13 @@ public abstract class PhysicsObject2D {
      * @param deltaT
      *        The time step size to simulate in seconds.
      */
-    final void stepPhysics (double deltaT) {
-
-        Vector2D totalForce = new Vector2D();
-        double totalMoments;
-
-        // Let the object add all the forces and moments than it needs
-        calculatePhysics(deltaT);
-
-        // Linear motion
-        // TODO-IMPROVEMENT: see if there is a better way of doing the following.
-        totalForce = Vector2D.getSumOfVectors(forces);
-        acceleration = totalForce.scalarDivide(mass);
-
-        deltaVelocity = acceleration.scalarMultiply(deltaT);
-        velocity = velocity.add(deltaVelocity);
-
-        deltaPosition = velocity.scalarMultiply(deltaT);
-        position = position.add(deltaPosition);
-
-        // The physics object is responsible for adding the forces and moments every loop,
-        // so the current forces and moments are cleared.
-        forces.clear();
+    @Override
+    public void stepPhysics (double deltaT) {
+        // All of the linear forces are taken care of in the super
+        super.stepPhysics(deltaT);
 
         // Angular motion
-        totalMoments = 0.0;
+        double totalMoments = 0.0;
         for (double moment : moments) {
             totalMoments += moment;
         }
@@ -85,15 +69,7 @@ public abstract class PhysicsObject2D {
         angularVelocity += angularAcceleration * deltaT;
         angle += angularVelocity * deltaT;
 
-        // Clear the moments too.
+        // Clear the moments for the next iteration.
         moments.clear();
     }
-
-    /**
-     * The method is called once for every physics time step and allows the user to add any physics they need.
-     *
-     * @param deltaT
-     *        The time step size to simulate in seconds.
-     */
-    protected abstract void calculatePhysics (double deltaT);
 }
