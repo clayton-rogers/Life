@@ -1,5 +1,7 @@
 package com.gmail.claytonrogers53.life.Configuration;
 
+import com.gmail.claytonrogers53.life.Log.Log;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.NoSuchFileException;
@@ -23,13 +25,18 @@ import java.util.List;
  *
  * Created by Clayton on 16/11/2014.
  */
-public class Configuration {
+public final class Configuration {
 
     /** The list of configuration items which has been read from the config file. */
     private static List<ConfigurationItem> configurationItems = new ArrayList<>();
 
     /** The default filename of the configuration file. */
     public static String DEFAULT_CONFIGURATION_FILENAME = "Life.conf";
+
+    private Configuration () {
+        Log.error("Configuration class should never be instantiated.");
+        throw new AssertionError();
+    }
 
     /**
      * Allows the user to query whether a given key is defined in the config file.
@@ -68,8 +75,9 @@ public class Configuration {
                 return c.getValue();
             }
         }
-
+        
         // If we get through the whole list without finding the item, it's not there.
+        Log.warning("The key " + key + " was queried, but does not exist in the config file.");
         throw new ValueNotConfiguredException();
     }
 
@@ -89,6 +97,7 @@ public class Configuration {
         try {
             return Integer.parseInt(getValue(key));
         } catch (NumberFormatException e) {
+            Log.warning("The key " + key + " could not be interpreted as an integer.");
             throw new ConfigFormatException();
         }
     }
@@ -110,6 +119,7 @@ public class Configuration {
         try {
             return Double.parseDouble(getValue(key));
         } catch (NumberFormatException e) {
+            Log.warning("The key " + key + " could not be interpreted as a double.");
             throw new ConfigFormatException();
         }
     }
@@ -130,28 +140,30 @@ public class Configuration {
      *        The filename (with path) that should be read as the configuration file.
      */
     public static void loadConfigurationItems (String filename) {
+        Log.info("Loading configuration items from: " + filename);
 
         // In case the user wants to redo the load. (Should generally not happen.)
+        if (configurationItems.size() != 0) {
+            Log.warning("Configuration database already exist. Overwriting entries.");
+        }
         configurationItems.clear();
 
-        List<String> configFile = null;
+        List<String> configFileContents = null;
 
         Path filePath = Paths.get(filename);
         try {
-            configFile = Files.readAllLines(filePath);
+            configFileContents = Files.readAllLines(filePath);
         } catch (NoSuchFileException e) {
-            // TODO-IMPROVEMENT: Add this to the actual logging. And notify user.
-            System.out.println("Configuration file \"" + filePath + "\" did not exist.");
+            Log.warning("The configuration file " + filename + " was not found. No configuration settings will be read.");
+            return;
         } catch (IOException e) {
-            // There should only be an IO error if something has gone very wrong with the filesystem or the hardware
-            // so we will just crash here.
-            e.printStackTrace();
-            System.exit(13);
+            Log.error("There was an unexpected error reading " + filename + ". No configuration settings will be read.");
+            return;
         }
 
-        if (configFile != null) {
+        if (configFileContents != null) {
             int lineNumber = 0;
-            for (String line : configFile) {
+            for (String line : configFileContents) {
                 // Extract a key value pair if possible, otherwise discard the line.
 
                 // Trim any of that pesky leading whitespace.
@@ -172,9 +184,7 @@ public class Configuration {
                 // If the line is not blank and not a comment, expect it to be a key value pair.
                 int equalPosition = line.indexOf('=');
                 if (equalPosition == -1) {
-                    // There is no equal sign on the line. That's an error.
-                    // TODO-IMPROVEMENT: Add this to logging instead.
-                    System.out.println("Line " + lineNumber + " of the config file could not be parsed.");
+                    Log.warning("No equal sign could be found on line " + String.valueOf(lineNumber) + ", skipping line.");
                     continue;
                 }
                 String key = line.substring(0, equalPosition);
@@ -182,10 +192,10 @@ public class Configuration {
                 String value = line.substring(equalPosition + 1, eol);
 
                 configurationItems.add(new ConfigurationItem(key, value, lineNumber));
+                Log.info("Added to config database: KEY:<" + key + "> VALUE:<" + value + ">");
             }
         }
 
-        // TODO-IMPROVEMENT: Add this to the actual logging
-        System.out.println("Loaded " + configurationItems.size() + " items from configuration file \"" + filename + "\"");
+        Log.info("Loaded " + configurationItems.size() + " items from configuration file: " + filename);
     }
 }

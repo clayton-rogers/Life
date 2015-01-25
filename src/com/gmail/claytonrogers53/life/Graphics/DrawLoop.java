@@ -3,6 +3,7 @@ package com.gmail.claytonrogers53.life.Graphics;
 import com.gmail.claytonrogers53.life.Configuration.ConfigFormatException;
 import com.gmail.claytonrogers53.life.Configuration.Configuration;
 import com.gmail.claytonrogers53.life.Configuration.ValueNotConfiguredException;
+import com.gmail.claytonrogers53.life.Log.Log;
 
 import javax.swing.*;
 import java.awt.*;
@@ -65,25 +66,40 @@ public final class DrawLoop extends JFrame implements Runnable{
             if (Configuration.isSet("WINDOW_WIDTH")) {
                 width = Configuration.getValueInt("WINDOW_WIDTH");
             }
+        } catch (ValueNotConfiguredException e) {
+            // Since we're checking whether these values have been set, this should never happen, so we will log an
+            // error and finish the draw thread.
+            Log.error("DrawLoop tried to retrieve \"WINDOW_WIDTH\" value that did not exist.");
+            isDrawing = false;
+        } catch (ConfigFormatException e) {
+            Log.warning("\"WINDOW_WIDTH\" value could not be interpreted, using default.");
+            width = DEFAULT_WIDTH;
+        }
+        try {
             if (Configuration.isSet("WINDOW_HEIGHT")) {
                 height = Configuration.getValueInt("WINDOW_HEIGHT");
             }
+        } catch (ValueNotConfiguredException e) {
+            // Since we're checking whether these values have been set, this should never happen, so we will log an
+            // error and finish the draw thread.
+            Log.error("DrawLoop tried to retrieve \"WINDOW_HEIGHT\" value that did not exist.");
+            isDrawing = false;
+        } catch (ConfigFormatException e) {
+            Log.warning("\"WINDOW_HEIGHT\" value could not be interpreted, using default.");
+            height = DEFAULT_HEIGHT;
+        }
+        try {
             if (Configuration.isSet("DRAW_DT")){
                 draw_dt = Configuration.getValueInt("DRAW_DT");
             }
         } catch (ValueNotConfiguredException e) {
-            // Since we're checking whether these values have been set, this exception should never happen.
-            // So just print a stack trace and kill the thread.
-            Thread.dumpStack();
+            // Since we're checking whether these values have been set, this should never happen, so we will log an
+            // error and finish the draw thread.
+            Log.error("DrawLoop tried to retrieve \"DRAW_DT\" value that did not exist.");
             isDrawing = false;
         } catch (ConfigFormatException e) {
-            // TODO-IMPROVEMENT: For now we will just do the same as if it was not configured, but maybe should not
-            // crash.
-
-            // Since we're checking whether these values have been set, this exception should never happen.
-            // So just print a stack trace and kill the thread.
-            Thread.dumpStack();
-            isDrawing = false;
+            Log.warning("\"DRAW_DT\" value could not be interpreted, using default.");
+            draw_dt = DEFAULT_DT;
         }
         this.setSize(width, height);
         this.setVisible(true);
@@ -105,7 +121,9 @@ public final class DrawLoop extends JFrame implements Runnable{
      */
     @Override
     public void run() {
+        Log.info("Starting graphics loop.");
         graphicsLoop();
+        Log.info("Graphics loop exited.");
     }
 
     /**
@@ -243,6 +261,7 @@ public final class DrawLoop extends JFrame implements Runnable{
     public void stopDrawing () {
         // isDrawing is volatile therefore we do not need to obtain a lock here.
         isDrawing = false;
+        Log.info("Stopping drawing.");
     }
 
     /**
@@ -258,13 +277,16 @@ public final class DrawLoop extends JFrame implements Runnable{
      */
     public void addToDrawList (Drawable object) {
         if (object == null) {
-            Thread.dumpStack();
-            System.exit(13);
+            Log.warning("Attempted to add a null object to the draw list.");
+            return;
         }
 
         synchronized (drawableList) {
             if (!drawableList.contains(object)) {
                 drawableList.add(object);
+                Log.info("Added an object to the draw list.");
+            } else {
+                Log.warning("Attempted to add an object to the draw list which was already there.");
             }
         }
     }
@@ -279,12 +301,18 @@ public final class DrawLoop extends JFrame implements Runnable{
      */
     public void removeFromDrawList (Drawable object) {
         if (object == null) {
-            Thread.dumpStack();
-            System.exit(13);
+            Log.warning("Attempted to remove a null object from the draw list.");
+            return;
         }
 
         synchronized (drawableList) {
-            drawableList.remove(object);
+            boolean didRemoveDoAnything = drawableList.remove(object);
+            if (!didRemoveDoAnything) {
+                Log.warning("Attempted to remove an object from the draw list which was not there.");
+            } else {
+                Log.info("Removed an object from the draw list.");
+            }
+
         }
     }
 
@@ -296,6 +324,7 @@ public final class DrawLoop extends JFrame implements Runnable{
      */
     public void clearDrawList () {
         synchronized (drawableList) {
+            Log.info("Drawing list was cleared.");
             drawableList.clear();
         }
     }
@@ -310,9 +339,13 @@ public final class DrawLoop extends JFrame implements Runnable{
      * @see #setFPS
      */
     public synchronized void setGraphicsTimeDelta (long dt_millis) {
-        if (dt_millis < 0) return;
+        if (dt_millis < 0) {
+            Log.warning("Attempted to set a negative graphics delta t.");
+            return;
+        }
 
         draw_dt = dt_millis;
+        Log.info("Setting drawing delta t to: " + String.valueOf(draw_dt) + " ms.");
     }
 
     /**
@@ -325,10 +358,17 @@ public final class DrawLoop extends JFrame implements Runnable{
      * @see #setGraphicsTimeDelta
      */
     public synchronized void setFPS (int FPS) {
-        if (FPS <= 0) return;
-        if (FPS > 1000) FPS = 1000;
+        if (FPS <= 0) {
+            Log.warning("Attempted to set an FPS less than or equal to zero.");
+            return;
+        }
+
+        if (FPS > 1000) {
+            FPS = 1000;
+        }
 
         draw_dt = 1000/FPS;
+        Log.info("Setting drawing delta t to: " + String.valueOf(draw_dt) + " ms.");
     }
 
     /**
@@ -339,8 +379,12 @@ public final class DrawLoop extends JFrame implements Runnable{
      *        The desired zoom level.
      */
     public synchronized void setZoom(double zoom) {
-        if (zoom <= 0.0) return;
+        if (zoom <= 0.0) {
+            Log.warning("Attempted to set a zoom level less than or equal to zero.");
+            return;
+        }
         this.zoom = zoom;
+        Log.info("Setting zoom level to: " + String.valueOf(this.zoom));
     }
 
     /**
@@ -355,5 +399,6 @@ public final class DrawLoop extends JFrame implements Runnable{
     public synchronized void setPan(double panX, double panY) {
         this.panX = panX;
         this.panY = panY;
+        Log.info("Setting pan to: (" + String.valueOf(this.panX) + ", " + String.valueOf(this.panY) + ") m.");
     }
 }

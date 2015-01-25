@@ -1,5 +1,6 @@
 package com.gmail.claytonrogers53.life.Genetics;
 
+import com.gmail.claytonrogers53.life.Log.Log;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -29,9 +30,7 @@ public class Genome implements Comparable<Genome> {
             return -1;
         }
 
-        // Should never get to this code.
-        Thread.dumpStack();
-        System.exit(13);
+        Log.error("Something has gone terribly wrong while comparing two genomes' fitness.");
         return 0;
     }
 
@@ -47,7 +46,7 @@ public class Genome implements Comparable<Genome> {
 
     /** The fitness of the particular organism, used by the genePool selection algorithm. It is set to default until
      *  the organism is evaluated. */
-    private int fitness = 0;
+    private int fitness = DEFAULT_GENOME_FITNESS;
 
     /**
      * Create a new genome with an empty genetic code. Genes can be added/set using the setGene method.
@@ -68,7 +67,6 @@ public class Genome implements Comparable<Genome> {
         for (int i : geneticCode) {
             this.geneticCode.add(i);
         }
-        fitness = DEFAULT_GENOME_FITNESS;
     }
 
     /**
@@ -86,6 +84,7 @@ public class Genome implements Comparable<Genome> {
      * should simply create a new genome object.
      */
     public void clear () {
+        Log.info("Wiping an entire genome.");
         geneticCode.clear();
         fitness = DEFAULT_GENOME_FITNESS;
     }

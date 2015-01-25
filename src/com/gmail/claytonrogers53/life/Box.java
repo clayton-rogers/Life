@@ -26,7 +26,7 @@ public class Box extends PhysicsObject2D implements Drawable {
         g.fill(new Rectangle2D.Double(0.0,0.0,20.0,20.0));
         g.draw(new Rectangle2D.Double(4.0, 4.0, 8.0, 8.0));
         drawing.sprite = sprite;
-        // TODO: make sprite black edge with white centre.
+        // TODO-BUG: Sprite is solid white instead of white with black edge.
     }
 
     @Override

@@ -62,7 +62,7 @@ public abstract class PhysicsObject2D {
         calculatePhysics(deltaT);
 
         // Linear motion
-        // TODO: see if there is a better way of doing the following.
+        // TODO-IMPROVEMENT: see if there is a better way of doing the following.
         Vector2D.getSumOfVectors(forces, totalForce);
         acceleration.set(totalForce);
         acceleration.scalarDivide(mass);

@@ -1,5 +1,7 @@
 package com.gmail.claytonrogers53.life.Genetics;
 
+import com.gmail.claytonrogers53.life.Log.Log;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -26,6 +28,7 @@ public final class GenePool {
      */
     public void addGenome (Genome genome) {
         genePool.add(genome);
+        Log.info("Added a genome to the gene pool.");
     }
 
     /**
@@ -35,7 +38,10 @@ public final class GenePool {
      *        The genome to be removed.
      */
     public void removeGenome (Genome genome) {
-        genePool.add(genome);
+        boolean didRemoveDoAnything = genePool.add(genome);
+        if (!didRemoveDoAnything) {
+            Log.warning("Attempted to remove and gene pool member which didn't exist.");
+        }
     }
 
     /**
@@ -55,6 +61,7 @@ public final class GenePool {
      */
     public void nextGeneration () {
         generation++;
+        Log.info("Generating generation " + String.valueOf(generation) + ".");
 
         int populationFitness = 0;
         for (Genome g : genePool) {
@@ -86,6 +93,7 @@ public final class GenePool {
      * generally not be used. Instead a new gene pool should just be created.
      */
     public void clear () {
+        Log.info("Entire gene pool cleared.");
         genePool.clear();
         generation = 0;
     }

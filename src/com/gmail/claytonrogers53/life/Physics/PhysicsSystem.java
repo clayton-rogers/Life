@@ -3,6 +3,7 @@ package com.gmail.claytonrogers53.life.Physics;
 import com.gmail.claytonrogers53.life.Configuration.ConfigFormatException;
 import com.gmail.claytonrogers53.life.Configuration.Configuration;
 import com.gmail.claytonrogers53.life.Configuration.ValueNotConfiguredException;
+import com.gmail.claytonrogers53.life.Log.Log;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -42,22 +43,27 @@ public final class PhysicsSystem implements Runnable {
             if (Configuration.isSet("PHYSICS_DT")) {
                 physics_dt = Configuration.getValueInt("PHYSICS_DT");
             }
+        } catch (ValueNotConfiguredException e) {
+            // Since we're checking whether these values have been set, this should never happen, so we will log an
+            // error and finish the draw thread.
+            Log.error("DrawLoop tried to retrieve \"PHYSICS_DT\" value that did not exist.");
+            isPhysicsRunning = false;
+        } catch (ConfigFormatException e) {
+            Log.warning("\"PHYSICS_DT\" value could not be interpreted, using default.");
+            physics_dt = DEFAULT_PHYSICS_DT;
+        }
+        try {
             if (Configuration.isSet("PHYSICS_MULTIPLIER")) {
                 physicsMultiplier = Configuration.getValueDouble("PHYSICS_MULTIPLIER");
             }
         } catch (ValueNotConfiguredException e) {
-            // Since we're checking whether these values have been set, this exception should never happen.
-            // So just print a stack trace and kill the thread.
-            Thread.dumpStack();
+            // Since we're checking whether these values have been set, this should never happen, so we will log an
+            // error and finish the draw thread.
+            Log.error("DrawLoop tried to retrieve \"PHYSICS_MULTIPLIER\" value that did not exist.");
             isPhysicsRunning = false;
         } catch (ConfigFormatException e) {
-            // TODO-IMPROVEMENT: For now we will just do the same as if it was not configured, but maybe should not
-            // crash.
-
-            // Since we're checking whether these values have been set, this exception should never happen.
-            // So just print a stack trace and kill the thread.
-            Thread.dumpStack();
-            isPhysicsRunning = false;
+            Log.warning("\"PHYSICS_MULTIPLIER\" value could not be interpreted, using default.");
+            physicsMultiplier = DEFAULT_PHYSICS_MULTIPLIER;
         }
     }
 
@@ -69,7 +75,9 @@ public final class PhysicsSystem implements Runnable {
      */
     @Override
     public void run() {
+        Log.info("Starting physics loop.");
         physicsLoop();
+        Log.info("Physics loop has stopped.");
     }
 
     /**
@@ -149,6 +157,7 @@ public final class PhysicsSystem implements Runnable {
      */
     public void stopPhysics () {
         isPhysicsRunning = false;
+        Log.info("Stopping physics using method \"stopPhysics\"");
     }
 
     /**
@@ -164,13 +173,16 @@ public final class PhysicsSystem implements Runnable {
      */
     public void addToPhysicsList (PhysicsObject2D object) {
         if (null == object) {
-            Thread.dumpStack();
-            System.exit(13);
+            Log.error("Attempted to add a null object to the physics list.");
+            return;
         }
 
         synchronized (physicsList) {
             if (!physicsList.contains(object)) {
                 physicsList.add(object);
+                Log.info("Adding a physics object to the physics list.");
+            } else {
+                Log.warning("Attempted to add a physics object to the physics list that was already there.");
             }
         }
     }
@@ -185,12 +197,17 @@ public final class PhysicsSystem implements Runnable {
      */
     public void removeFromPhysicsList (PhysicsObject2D object) {
         if (null == object) {
-            Thread.dumpStack();
-            System.exit(13);
+            Log.error("Attempted to remove a null object from the physics list.");
+            return;
         }
 
         synchronized (physicsList) {
-            physicsList.remove(object);
+            boolean didRemoveDoAnything = physicsList.remove(object);
+            if (!didRemoveDoAnything) {
+                Log.warning("Attempted to remove an object from the physics list that wasn't there.");
+            } else {
+                Log.info("Removed an object from the physics list.");
+            }
         }
     }
 
@@ -204,6 +221,7 @@ public final class PhysicsSystem implements Runnable {
     public void clearPhysicsList () {
         synchronized (physicsList) {
             physicsList.clear();
+            Log.info("Clearing the physics list.");
         }
     }
 
@@ -229,6 +247,7 @@ public final class PhysicsSystem implements Runnable {
      */
     public void pausePhysics () {
         isPaused = true;
+        Log.info("Pausing physics.");
     }
 
     /**
@@ -239,6 +258,7 @@ public final class PhysicsSystem implements Runnable {
      */
     public void continuePhysics () {
         isPaused = false;
+        Log.info("Unpausing physics.");
     }
 
     /**
@@ -251,10 +271,12 @@ public final class PhysicsSystem implements Runnable {
      */
     public synchronized void setPhysicsTimeDelta (long dt_millis) {
         if (dt_millis < 0) {
+            Log.warning("Attempted to set a physics delta t of less than zero.");
             return;
         }
 
         physics_dt = dt_millis;
+        Log.info("Setting a physics delta t to " + String.valueOf(physics_dt) + " ms.");
     }
 
     /**
@@ -278,9 +300,11 @@ public final class PhysicsSystem implements Runnable {
      */
     public synchronized void setPhysicsMultiplier(double physicsMultiplier) {
         if (physicsMultiplier <= 0) {
+            Log.warning("Attempted to set a physics multiplier of less than or equal to zero.");
             return;
         }
         this.physicsMultiplier = physicsMultiplier;
+        Log.info("Set physics multiplier to " + String.valueOf(this.physicsMultiplier) + "x.");
     }
 
     /**
