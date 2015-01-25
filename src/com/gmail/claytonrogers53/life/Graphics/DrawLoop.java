@@ -7,10 +7,11 @@ import com.gmail.claytonrogers53.life.Log.Log;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferStrategy;
 import java.util.*;
-import java.util.List;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -50,16 +51,20 @@ public final class DrawLoop extends JFrame implements Runnable{
     *  flooded with inputs. */
     private static final int    INPUTS_PER_LOOP  = 75;
 
+    private static final int FPS_X_POS = 10;
+    private static final int FPS_Y_POS = 100;
+
     // Actual instance variables. For all these variables we will user "this" as the locking object.
-    private long                draw_dt       = DEFAULT_DT;
-    private int                 width         = DEFAULT_WIDTH;
-    private int                 height        = DEFAULT_HEIGHT;
-    private double              zoom          = DEFAULT_ZOOM;
-    private double              panX          = DEFAULT_PAN_X;
-    private double              panY          = DEFAULT_PAN_Y;
-    private volatile boolean    isDrawing     = true;
-    private long                frameTime     = 0L;
-    private double              gLoad         = 0.0;
+    private long                draw_dt        = DEFAULT_DT;
+    private int                 width          = DEFAULT_WIDTH;
+    private int                 height         = DEFAULT_HEIGHT;
+    private double              zoom           = DEFAULT_ZOOM;
+    private double              panX           = DEFAULT_PAN_X;
+    private double              panY           = DEFAULT_PAN_Y;
+    private volatile boolean    isDrawing      = true;
+    private long                frameTime      = 0L;
+    private double              gLoad          = 0.0;
+    private boolean             isFpsDisplayed = false;
 
     /** The list of objects that will be drawn every loop */
     private final Collection<Drawable> drawableList = new ArrayList<>(20);
@@ -143,6 +148,20 @@ public final class DrawLoop extends JFrame implements Runnable{
         addMouseListener(input);
         addMouseMotionListener(input);
         addMouseWheelListener(input);
+
+        // Add a listener for the ctrl-shift-f to toggle the FPS counter.
+        addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyReleased(KeyEvent e) {
+                super.keyReleased(e);
+
+                if (e.isControlDown() && e.isShiftDown() && (e.getKeyCode() == KeyEvent.VK_F)) {
+                    synchronized (this) {
+                        isFpsDisplayed = !isFpsDisplayed;
+                    }
+                }
+            }
+        });
 
         graphicsLoop();
 
@@ -264,8 +283,11 @@ public final class DrawLoop extends JFrame implements Runnable{
                 }
             }
 
-            g.drawString("Frame Time: " + frameTime + " ms", 10, 45);
-            g.drawString("G Load: " + (int)gLoad + " %", 10, 60);
+            if (isFpsDisplayed) {
+                g.drawString("Frame Time: " + frameTime + " ms", FPS_X_POS, FPS_Y_POS);
+                g.drawString("G Load: " + (int) gLoad + " %", FPS_X_POS, FPS_Y_POS + 15);
+                // 15 is roughly the text height
+            }
         } finally {
             if (g != null) {
                 g.dispose();
@@ -417,17 +439,12 @@ public final class DrawLoop extends JFrame implements Runnable{
      * @see #setGraphicsTimeDelta
      */
     public synchronized void setFPS (int FPS) {
-        int FPStoUse;
         if (FPS <= 0) {
             Log.warning("Attempted to set an FPS less than or equal to zero.");
             return;
         }
 
-        if (FPS > 1000) {
-            FPStoUse = 1000;
-        } else {
-            FPStoUse = FPS;
-        }
+        int FPStoUse = FPS > 1000 ? 1000 : FPS;
 
         draw_dt = 1000/FPStoUse;
         Log.info("Setting drawing delta t to: " + draw_dt + " ms.");
