@@ -1,0 +1,32 @@
+This file describes the structure and requirements of the whole "Life" program.
+
+==== THREADS ====
+** Physics **
+- Has a list of objects which currently need running.
+- Every (variable) time step, it calls the "void stepPhysics (double dt)" method of each of the physics object.
+- New physics object need to be registered with the physics system when they are created. This is done using the "add"
+  method of the physics system.
+- When an object should no longer be physics simulated, it should remove itself from the physics system using the
+  "remove" method of the physics system.
+- The physics system can be emptied using the "empty" method.
+- The current number of physics objects can be queried using the "getNumberOfPhysicsObjects" method.
+- The physics system can be paused using the "pause" method and restarted using the "continuePhysics" method. If the physics
+  system is all ready running then the continue method does nothing. The "isRunning" method can be used to check if the
+  physics system is running.
+- The physics refresh rate can be adjusted using the "setPhysicsTimeDelta", with a frame time in milliseconds. By
+  default the physics rate is set to 17 ms, i.e. a bit slower than 60 fps.
+
+** Graphics **
+- Has a list of objects which currently need drawing to the screen.
+- Every graphics refresh, it clears the screen and redraws it. It does this by calling the "getDrawing" method of each
+  registered drawable object. This method returns a sprite and a location for it to be drawn. This location uses a
+  "normal" coordinate system. I.E. the bottom left hand corner is (0,0) and to the right is positive x and up is
+  positive y.
+- Any new objects which need to be draw on the screen must add themselves to the drawing list using the "add" method.
+- When an object no longer wishes to be drawn on the screen it must call the "remove" method.
+- The desired refresh rate can be set using the "setGraphicsTimeDelta" using ms or using "setFPS" using fps.
+
+
+** Logic **
+- This is the main program thread. It starts and manages the the physics and graphics threads. It creates and destroys
+  objects as required. It computes any game logic or other program logic.
