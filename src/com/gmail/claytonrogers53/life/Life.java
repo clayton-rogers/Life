@@ -44,5 +44,14 @@ public class Life {
         } catch (InterruptedException e) {
             Log.error("Main thread was interrupted! Exiting.");
         }
+
+        // Call some methods to it stop complaining about them being unused.
+        drawLoop.stopDrawing();
+        drawLoop.removeFromDrawList(myBox);
+        drawLoop.clearDrawList();
+        drawLoop.setPan(0,0);
+        drawLoop.setZoom(1.0);
+        drawLoop.setGraphicsTimeDelta(17);
+        drawLoop.setFPS(60);
     }
 }
