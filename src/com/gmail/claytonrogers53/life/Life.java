@@ -38,8 +38,6 @@ public class Life {
         drawLoop.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 
-        // TODO: Actual life stuff
-
         try {
             physicsThread.join();
             drawingThread.join();

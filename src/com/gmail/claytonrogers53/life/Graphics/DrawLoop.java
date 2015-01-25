@@ -136,8 +136,6 @@ public final class DrawLoop extends JFrame implements Runnable{
         long timeToWait;
 
         while (isDrawing) {
-            // TODO-IMPROVEMENT: Use nanosecond timers.
-
             drawScreen();
 
             // After draw screen has completed, there still may be lots of time left in the frame. So we will wait
@@ -166,8 +164,6 @@ public final class DrawLoop extends JFrame implements Runnable{
      * Draws the current frame on the back buffer and then shows it to the screen. Called once every draw loop.
      */
     private void drawScreen () {
-        // TODO-IMPROVEMENT: Add support for GUI elements which do not pan or zoom, they stay the same size and
-        // position.
         BufferStrategy bf = this.getBufferStrategy();
         Graphics g = null;
         Graphics2D g2;

@@ -84,7 +84,6 @@ public final class PhysicsSystem implements Runnable {
      * The main physics loop. This is run on the new thread. It keeps running even when paused.
      */
     private void physicsLoop() {
-        // TODO-IMPROVEMENT: Use nanosecond timers.
         long endOfLastLoopTime = System.currentTimeMillis();
 
         while (isPhysicsRunning) {

@@ -68,8 +68,6 @@ public final class Configuration {
      * @see #isSet
      */
     public static String getValue (String key) throws ValueNotConfiguredException {
-
-        // TODO-IMPROVEMENT: This method and isSet methods will generally be slow, but we don't query them often.
         for (ConfigurationItem c : configurationItems) {
             if (c.getKey().equals(key)) {
                 return c.getValue();
