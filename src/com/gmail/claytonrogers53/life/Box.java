@@ -23,10 +23,11 @@ public class Box extends PhysicsObject2D implements Drawable {
 
         sprite = new BufferedImage(20, 20,BufferedImage.TYPE_INT_RGB);
         Graphics2D g = sprite.createGraphics();
+        g.setColor(Color.WHITE);
         g.fill(new Rectangle2D.Double(0.0,0.0,20.0,20.0));
-        g.draw(new Rectangle2D.Double(4.0, 4.0, 8.0, 8.0));
+        g.setColor(Color.BLACK);
+        g.draw(new Rectangle2D.Double(0.0, 0.0, 19.0, 19.0));
         drawing.sprite = sprite;
-        // TODO-BUG: Sprite is solid white instead of white with black edge.
     }
 
     @Override
@@ -34,15 +35,15 @@ public class Box extends PhysicsObject2D implements Drawable {
         drawing.xPosition = position.getMagX();
         drawing.yPosition = position.getMagY();
         drawing.rotation = angle;
-        drawing.spriteZoom = 1.0/20.0;
+        drawing.spriteZoom = 1.0/15.0;
         drawing.sprite = sprite;
 
-        angle += .1;
         return drawing;
     }
 
     @Override
     protected void calculatePhysics(double deltaT) {
         // don't need to do any physics
+        angle += 1.0 * deltaT;
     }
 }
