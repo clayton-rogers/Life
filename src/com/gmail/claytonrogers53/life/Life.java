@@ -1,12 +1,16 @@
 package com.gmail.claytonrogers53.life;
 
+import com.gmail.claytonrogers53.life.Configuration.Configuration;
 import com.gmail.claytonrogers53.life.Graphics.DrawLoop;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
 import com.gmail.claytonrogers53.life.Physics.Vector2D;
 
+
 public class Life {
 
-    public static void main (String args[]) {
+    public static void main (String[] args) {
+        Configuration.loadConfigurationItems();
+
         DrawLoop drawLoop = new DrawLoop();
         Thread drawingThread = new Thread(drawLoop);
         PhysicsSystem physicsSystem = new PhysicsSystem();
@@ -15,7 +19,7 @@ public class Life {
         physicsThread.start();
         drawingThread.start();
 
-        Box myBox = new Box(1, 1, new Vector2D(20.0, 20.0), new Vector2D(1.50, 1.50), 20.0, 20.0);
+        Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0));
         drawLoop.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 

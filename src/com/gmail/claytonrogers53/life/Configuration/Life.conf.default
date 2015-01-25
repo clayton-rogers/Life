@@ -1,0 +1,8 @@
+// This is a default config file which can be copied and edited as needed.
+
+WINDOW_WIDTH=900
+WINDOW_HEIGHT=500
+// In milliseconds
+DRAW_DT=17
+// In milliseconds
+PHYSICS_DT=17

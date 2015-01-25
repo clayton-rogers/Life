@@ -26,7 +26,15 @@ This file describes the structure and requirements of the whole "Life" program.
 - When an object no longer wishes to be drawn on the screen it must call the "remove" method.
 - The desired refresh rate can be set using the "setGraphicsTimeDelta" using ms or using "setFPS" using fps.
 
-
 ** Logic **
 - This is the main program thread. It starts and manages the the physics and graphics threads. It creates and destroys
   objects as required. It computes any game logic or other program logic.
+
+
+==== SYSTEMS/OBJECTS ====
+** Physics **
+
+** Graphics **
+
+** Genetics **
+-

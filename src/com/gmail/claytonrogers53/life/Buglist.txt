@@ -1,3 +1,0 @@
-List of current bugs to be fixed:
-
-- Source code largely does not include comments (javadoc or otherwise).

@@ -13,7 +13,7 @@ public class ExpMain extends JFrame {
 
     double x = 20.0;
 
-    public static void main (String arg[]) {
+    public static void main (String[] arg) {
         new ExpMain();
     }
 
