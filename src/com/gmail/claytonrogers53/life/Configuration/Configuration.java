@@ -26,7 +26,7 @@ import java.util.List;
 public class Configuration {
 
     /** The list of configuration items which has been read from the config file. */
-    private static List<ConfigurationItem> configurationItems = new ArrayList<ConfigurationItem>();
+    private static List<ConfigurationItem> configurationItems = new ArrayList<>();
 
     /** The default filename of the configuration file. */
     public static String DEFAULT_CONFIGURATION_FILENAME = "Life.conf";

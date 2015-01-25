@@ -12,7 +12,7 @@ import java.util.List;
 public final class GenePool {
 
     /** Where all the genomes are stored. */
-    private List<Genome> genePool = new ArrayList<Genome>();
+    private List<Genome> genePool = new ArrayList<>();
 
     /** The number of next generations that have been calculated. */
     private int generation = 0;
@@ -61,7 +61,7 @@ public final class GenePool {
             populationFitness += g.getFitness();
         }
 
-        ArrayList<Genome> nextGeneration = new ArrayList<Genome>(genePool.size());
+        ArrayList<Genome> nextGeneration = new ArrayList<>(genePool.size());
 
         // Sorting the genePool from most fit to least.
         Collections.sort(genePool);

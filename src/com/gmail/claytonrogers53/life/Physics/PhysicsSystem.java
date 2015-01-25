@@ -31,7 +31,7 @@ public final class PhysicsSystem implements Runnable {
     private volatile boolean    isPhysicsRunning   = true;
     private volatile boolean    isPaused           = false;
     /** The list of physics objects that will be calculated every loop */
-    private final Collection<PhysicsObject2D> physicsList = new ArrayList<PhysicsObject2D>();
+    private final Collection<PhysicsObject2D> physicsList = new ArrayList<>();
 
     /**
      * Constructs a new physics systems object. The physics system reference should then be given to a new Thread

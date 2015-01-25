@@ -51,7 +51,7 @@ public final class DrawLoop extends JFrame implements Runnable{
     private volatile boolean    isDrawing     = true;
 
     /** The list of objects that will be drawn every loop */
-    private final List<Drawable> drawableList = new ArrayList<Drawable>();
+    private final List<Drawable> drawableList = new ArrayList<>();
 
     /**
      * Constructs a new runnable DrawLoop object. If the window settings are set in the configuration file then they

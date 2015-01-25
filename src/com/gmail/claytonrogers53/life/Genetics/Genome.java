@@ -55,7 +55,7 @@ public class Genome implements Comparable<Genome> {
      * @see #setGene
      */
     public Genome () {
-        geneticCode = new ArrayList<Integer>();
+        geneticCode = new ArrayList<>();
     }
 
     /**
@@ -77,7 +77,7 @@ public class Genome implements Comparable<Genome> {
      * @param genome The genome to be copied.
      */
     public Genome (Genome genome) {
-        this.geneticCode = new ArrayList<Integer>(genome.geneticCode);
+        this.geneticCode = new ArrayList<>(genome.geneticCode);
         this.fitness = genome.fitness;
     }
 

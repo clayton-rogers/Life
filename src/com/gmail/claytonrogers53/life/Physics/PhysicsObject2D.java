@@ -22,8 +22,8 @@ public abstract class PhysicsObject2D {
     protected double mass;
     protected double momentOfInertia;
 
-    protected List<Vector2D> forces = new ArrayList<Vector2D>();
-    protected List<Double> moments = new ArrayList<Double>();
+    protected List<Vector2D> forces = new ArrayList<>();
+    protected List<Double> moments = new ArrayList<>();
 
     /**
      * Create a new physics object with the given parameters.
