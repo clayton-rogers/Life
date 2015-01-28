@@ -1,7 +1,5 @@
 package com.gmail.claytonrogers53.life.Graphics;
 
-import java.awt.*;
-
 /**
  * Any object which needs to be drawn on the screen needs to implement this interface.
  *
@@ -14,5 +12,5 @@ public interface Drawable {
      *
      * @return The drawing object to be drawn.
      */
-    public Drawing getDrawing ();
+    Drawing getDrawing ();
 }

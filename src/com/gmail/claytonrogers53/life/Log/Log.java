@@ -21,14 +21,21 @@ public final class Log {
      * The available logging levels.
      */
     public enum LogLevel {
+        /** Error is something that should never happen and which can't be recovered from. It will generally be near
+         * the end of a log because the program will have crashed. */
         ERROR,
+        /** Warning is something that should never happen but we can safely ignore when it does. This is the default
+         * log level, since a properly constructed system will never generate warnings or above. */
         WARNING,
+        /** Info statements are placed in a variety of places to tell what the program is doing. Changing to this log
+         * level can be useful when debugging.*/
         INFO,
+        /** Debug statements are used only when debugging certain sections of code. */
         DEBUG
     }
 
     public  static final String DEFAULT_FILENAME = "Life.log";
-    private static final LogLevel DEFAULT_LOG_LEVEL = LogLevel.ERROR;
+    private static final LogLevel DEFAULT_LOG_LEVEL = LogLevel.WARNING;
 
     private static PrintWriter   printWriter = null;
     private static LogLevel      levelToLog  = DEFAULT_LOG_LEVEL;

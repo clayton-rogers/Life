@@ -80,42 +80,43 @@ class Input implements MouseListener, MouseMotionListener, MouseWheelListener {
         ));
     }
 
+    /**
+     * Tells the graphics loop that the mouse has been clicked so that it can notify the GUI elements.
+     *
+     * @param e
+     *        The mouse event.
+     */
+    @Override
+    public void mouseReleased(MouseEvent e) {
+        if (button == MouseEvent.BUTTON1) {
+            drawLoop.notifyGUIElementsOfClick(e.getX(), e.getY());
+        }
+    }
 
     /**
      * Unused.
-     * @param e
+     * @param e Unused param.
      */
-    @SuppressWarnings("JavaDoc")
     @Override
     public void mouseExited(MouseEvent e) {}
 
     /**
      * Unused.
-     * @param e
+     * @param e Unused param.
      */
-    @SuppressWarnings("JavaDoc")
     @Override
     public void mouseClicked(MouseEvent e) {}
 
     /**
      * Unused.
-     * @param e
+     * @param e Unused param.
      */
-    @SuppressWarnings("JavaDoc")
-    @Override
-    public void mouseReleased(MouseEvent e) {}
-
-    /**
-     * Unused.
-     * @param e
-     */
-    @SuppressWarnings("JavaDoc")
     @Override
     public void mouseEntered(MouseEvent e) {}
 
     /**
      * Unused.
-     * @param e
+     * @param e Unused param.
      */
     @Override
     public void mouseMoved(MouseEvent e) {}

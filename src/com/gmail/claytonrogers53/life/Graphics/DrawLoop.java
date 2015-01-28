@@ -68,6 +68,8 @@ public final class DrawLoop extends JFrame implements Runnable{
 
     /** The list of objects that will be drawn every loop */
     private final Collection<Drawable> drawableList = new ArrayList<>(20);
+    /** The list of all GUI objects on the screen (i.e. objects which do not pan and zoom). */
+    private final Collection<GUIelement> GUIelementList = new ArrayList<>(20);
     /** The list of inputs to be processed. */
     private final Queue<InputMessage> inputMessages = new ConcurrentLinkedQueue<>();
 
@@ -241,6 +243,7 @@ public final class DrawLoop extends JFrame implements Runnable{
      * Draws the current frame on the back buffer and then shows it to the screen. Called once every draw loop.
      */
     private void drawScreen () {
+
         BufferStrategy bf = getBufferStrategy();
         Graphics g = null;
 
@@ -280,6 +283,13 @@ public final class DrawLoop extends JFrame implements Runnable{
                     af.translate(-drawing.sprite.getWidth(null)/2.0, -drawing.sprite.getHeight(null)/2.0);
 
                     g2.drawImage(drawing.sprite, af, null);
+                }
+            }
+
+            // Draw the GUI elements.
+            synchronized (GUIelementList) {
+                for (GUIelement e : GUIelementList) {
+                    e.draw(g2);
                 }
             }
 
@@ -343,6 +353,7 @@ public final class DrawLoop extends JFrame implements Runnable{
         // isDrawing is volatile therefore we do not need to obtain a lock here.
         isDrawing = false;
         Log.info("Stopping drawing.");
+        dispose();
     }
 
     /**
@@ -490,5 +501,67 @@ public final class DrawLoop extends JFrame implements Runnable{
     void addToInputQueue (InputMessage message) {
         if (inputMessages == null) {return;}
         inputMessages.add(message);
+    }
+
+    /**
+     * Adds a GUI element to the list of elements to be drawn.
+     *
+     * @param e
+     *        The element to be added.
+     */
+    public void addGUIElement (GUIelement e) {
+        if (e == null) {
+            Log.warning("Attempted to add a null GUI element.");
+        } else {
+            synchronized (GUIelementList) {
+                GUIelementList.add(e);
+            }
+        }
+    }
+
+    /**
+     * Removes a GUI element from the list of elements.
+     *
+     * @param e
+     *        The element to be removed.
+     */
+    public void removeGUIElement (GUIelement e) {
+        if (e == null) {
+            Log.warning("Attempted to add a null GUI element.");
+        } else {
+            synchronized (GUIelementList) {
+                GUIelementList.remove(e);
+            }
+        }
+    }
+
+    /**
+     * Clears every element out of the GUI element list.
+     */
+    public void clearGUIElementList () {
+        synchronized (GUIelementList) {
+            GUIelementList.clear();
+        }
+    }
+
+    /**
+     * Called when a click occurs. Checks each GUI element to see whether the click was within its bounds.
+     *
+     * @param xClickPos
+     *        The x component of the click location.
+     *
+     * @param yClickPos
+     *        The y component of the click location.
+     */
+    void notifyGUIElementsOfClick (int xClickPos, int yClickPos) {
+        synchronized (GUIelementList) {
+            for (GUIelement e : GUIelementList) {
+                if (e.getLowerX() <= xClickPos && e.getUpperX() >= xClickPos) {
+                    if (e.getUpperY() <= yClickPos && e.getLowerY() >= yClickPos) {
+                        e.clicked(xClickPos-e.getLowerX(), yClickPos-e.getUpperY());
+                    }
+                }
+            }
+        }
     }
 }

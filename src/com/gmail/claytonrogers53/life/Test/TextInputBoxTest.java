@@ -2,32 +2,29 @@ package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
 import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Graphics.DrawLoop;
+import com.gmail.claytonrogers53.life.Graphics.*;
 import com.gmail.claytonrogers53.life.Log.Log;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
 import com.gmail.claytonrogers53.life.Physics.Vector2D;
-import org.junit.Test;
 
 import java.io.IOException;
+import java.util.concurrent.Callable;
 
 /**
- * Tests the performance of the graphics and physics systems by creating 7000 objects.
+ * Tests the use of input boxes
  *
- * Created by Clayton on 14/12/2014.
+ * Created by Clayton on 25/1/2015.
  */
-public class PerformanceTest {
-    public static void main (String[] args) {
-        String logFilename = Log.DEFAULT_FILENAME;
+public class TextInputBoxTest {
+    public static void main(String[] args) {
         try {
-            Log.init(logFilename);
+            Log.init(Log.DEFAULT_FILENAME);
         } catch (IOException e) {
             // Logging is important, therefore, do not start without it.
             e.printStackTrace();
             System.exit(1);
         }
-        Log.info("Loading configuration items.");
         Configuration.loadConfigurationItems();
-        Log.info("Loading configuration items done.");
 
         DrawLoop drawLoop = new DrawLoop();
         Thread drawingThread = new Thread(drawLoop);
@@ -40,31 +37,28 @@ public class PerformanceTest {
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
         drawLoop.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
-        try {
-            Thread.sleep(3000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        final int NUM_BOXES = 7000;
-        for (int i = 0; i < NUM_BOXES; i++) {
-            double posX = 0.0;
-            double posY = 0.0;
-            double velX = Math.random() * 2.0 - 1.0;
-            double velY = Math.random() * 2.0 - 1.0;
-            Vector2D vel = Vector2D.getVector2DMagnitudeAndDirection(10.0, Math.random() * 2 * Math.PI);
-            double angle = Math.random() * Math.PI * 2.0;
-            double angVel = Math.random() * 2.0 - 2.0;
-            myBox = new Box(1, 1, new Vector2D(posX,posY), vel, angle, angVel);
-            drawLoop.addToDrawList(myBox);
-            physicsSystem.addToPhysicsList(myBox);
+
+
+        TextInputBox tib = new TextInputBox();
+        tib.setText("");
+        tib.setPosition(100,100);
+        drawLoop.addGUIElement(tib);
+
+        TextBox tb = new TextBox();
+        tb.setPosition(400,100);
+        tb.setText("");
+        drawLoop.addGUIElement(tb);
+
+        for (int i = 0; i < 1000; i ++) {
+
+            tb.setText("Input text is: " + tib.getText());
 
             try {
-                Thread.sleep(1);
+                Thread.sleep(200);
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                System.exit(32);
             }
         }
-
 
         try {
             physicsThread.join();
