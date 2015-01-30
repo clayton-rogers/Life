@@ -6,10 +6,9 @@ package com.gmail.claytonrogers53.life.Configuration;
  *
  * Created by Clayton on 16/11/2014.
  */
-public class ConfigurationItem{
+class ConfigurationItem{
     private final String key;
     private final String value;
-    private final int    lineNumber;
 
     /**
      * Creates a new ConfigurationItem with the required values.
@@ -19,15 +18,10 @@ public class ConfigurationItem{
      *
      * @param value
      *        The value of the item. This is the data.
-     *
-     * @param lineNumber
-     *        The line number in the configuration file that the item was extracted from. This is generally only for
-     *        debug.
      */
-    public ConfigurationItem(String key, String value, int lineNumber) {
+    ConfigurationItem(String key, String value) {
         this.key         = key;
         this.value       = value;
-        this.lineNumber  = lineNumber;
     }
 
     /**
@@ -47,15 +41,5 @@ public class ConfigurationItem{
      */
     String getValue() {
         return value;
-    }
-
-    /**
-     * Allows the configuration system  to query the line number in the configuration file from which the item came.
-     * Generally only used for debug purposes.
-     *
-     * @return The line number from which the item came.
-     */
-    public int getLineNumber() {
-        return lineNumber;
     }
 }

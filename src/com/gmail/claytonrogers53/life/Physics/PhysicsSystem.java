@@ -1,8 +1,6 @@
 package com.gmail.claytonrogers53.life.Physics;
 
-import com.gmail.claytonrogers53.life.Configuration.ConfigFormatException;
 import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Configuration.ValueNotConfiguredException;
 import com.gmail.claytonrogers53.life.Log.Log;
 
 import java.util.ArrayList;
@@ -39,32 +37,8 @@ public final class PhysicsSystem implements Runnable {
      * instance to start it. Physics objects may be added before or after the physics system has started.
      */
     public PhysicsSystem() {
-        try {
-            if (Configuration.isSet("PHYSICS_DT")) {
-                physics_dt = Configuration.getValueInt("PHYSICS_DT");
-            }
-        } catch (ValueNotConfiguredException e) {
-            // Since we're checking whether these values have been set, this should never happen, so we will log an
-            // error and finish the draw thread.
-            Log.error("DrawLoop tried to retrieve \"PHYSICS_DT\" value that did not exist.");
-            isPhysicsRunning = false;
-        } catch (ConfigFormatException e) {
-            Log.warning("\"PHYSICS_DT\" value could not be interpreted, using default.");
-            physics_dt = DEFAULT_PHYSICS_DT;
-        }
-        try {
-            if (Configuration.isSet("PHYSICS_MULTIPLIER")) {
-                physicsMultiplier = Configuration.getValueDouble("PHYSICS_MULTIPLIER");
-            }
-        } catch (ValueNotConfiguredException e) {
-            // Since we're checking whether these values have been set, this should never happen, so we will log an
-            // error and finish the draw thread.
-            Log.error("DrawLoop tried to retrieve \"PHYSICS_MULTIPLIER\" value that did not exist.");
-            isPhysicsRunning = false;
-        } catch (ConfigFormatException e) {
-            Log.warning("\"PHYSICS_MULTIPLIER\" value could not be interpreted, using default.");
-            physicsMultiplier = DEFAULT_PHYSICS_MULTIPLIER;
-        }
+        physics_dt        = Configuration.getValueInt   ("PHYSICS_DT",    (int)DEFAULT_PHYSICS_DT);
+        physicsMultiplier = Configuration.getValueDouble("PHYSICS_MULTIPLIER", DEFAULT_PHYSICS_MULTIPLIER);
     }
 
     /**
@@ -318,7 +292,7 @@ public final class PhysicsSystem implements Runnable {
             retString += "physics_dt:        " + physics_dt         + NL;
             retString += "physicsMultiplier: " + physicsMultiplier  + NL;
             retString += "isPhysicsRunning:  " + isPhysicsRunning   + NL;
-            retString += "isPaused:          " +isPaused            + NL;
+            retString += "isPaused:          " + isPaused           + NL;
         }
 
         synchronized (physicsList) {

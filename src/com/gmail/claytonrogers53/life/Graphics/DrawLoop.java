@@ -1,8 +1,6 @@
 package com.gmail.claytonrogers53.life.Graphics;
 
-import com.gmail.claytonrogers53.life.Configuration.ConfigFormatException;
 import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Configuration.ValueNotConfiguredException;
 import com.gmail.claytonrogers53.life.Log.Log;
 
 import javax.swing.*;
@@ -80,46 +78,11 @@ public final class DrawLoop extends JFrame implements Runnable{
     public DrawLoop () {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        //this.setUndecorated(true);
-        try {
-            if (Configuration.isSet("WINDOW_WIDTH")) {
-                width = Configuration.getValueInt("WINDOW_WIDTH");
-            }
-        } catch (ValueNotConfiguredException e) {
-            // Since we're checking whether these values have been set, this should never happen, so we will log an
-            // error and finish the draw thread.
-            Log.error("DrawLoop tried to retrieve \"WINDOW_WIDTH\" value that did not exist.");
-            isDrawing = false;
-        } catch (ConfigFormatException e) {
-            Log.warning("\"WINDOW_WIDTH\" value could not be interpreted, using default.");
-            width = DEFAULT_WIDTH;
-        }
-        try {
-            if (Configuration.isSet("WINDOW_HEIGHT")) {
-                height = Configuration.getValueInt("WINDOW_HEIGHT");
-            }
-        } catch (ValueNotConfiguredException e) {
-            // Since we're checking whether these values have been set, this should never happen, so we will log an
-            // error and finish the draw thread.
-            Log.error("DrawLoop tried to retrieve \"WINDOW_HEIGHT\" value that did not exist.");
-            isDrawing = false;
-        } catch (ConfigFormatException e) {
-            Log.warning("\"WINDOW_HEIGHT\" value could not be interpreted, using default.");
-            height = DEFAULT_HEIGHT;
-        }
-        try {
-            if (Configuration.isSet("DRAW_DT")){
-                draw_dt = Configuration.getValueInt("DRAW_DT");
-            }
-        } catch (ValueNotConfiguredException e) {
-            // Since we're checking whether these values have been set, this should never happen, so we will log an
-            // error and finish the draw thread.
-            Log.error("DrawLoop tried to retrieve \"DRAW_DT\" value that did not exist.");
-            isDrawing = false;
-        } catch (ConfigFormatException e) {
-            Log.warning("\"DRAW_DT\" value could not be interpreted, using default.");
-            draw_dt = DEFAULT_DT;
-        }
+
+        width   = Configuration.getValueInt("WINDOW_WIDTH",  DEFAULT_WIDTH);
+        height  = Configuration.getValueInt("WINDOW_HEIGHT", DEFAULT_HEIGHT);
+        draw_dt = Configuration.getValueInt("DRAW_DT",  (int)DEFAULT_DT);
+
         setSize(width, height);
         setVisible(true);
 
