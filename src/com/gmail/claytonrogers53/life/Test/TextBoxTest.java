@@ -17,13 +17,7 @@ import java.io.IOException;
  */
 public class TextBoxTest {
     public static void main(String[] args) {
-        try {
-            Log.init(Log.DEFAULT_FILENAME);
-        } catch (IOException e) {
-            // Logging is important, therefore, do not start without it.
-            e.printStackTrace();
-            System.exit(1);
-        }
+        Log.init();
         Configuration.loadConfigurationItems();
 
         DrawLoop drawLoop = new DrawLoop();

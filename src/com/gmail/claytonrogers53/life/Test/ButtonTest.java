@@ -18,13 +18,7 @@ import java.util.concurrent.Callable;
  */
 public class ButtonTest {
     public static void main (String[] args) {
-        try {
-            Log.init(Log.DEFAULT_FILENAME);
-        } catch (IOException e) {
-            // Logging is important, therefore, do not start without it.
-            e.printStackTrace();
-            System.exit(1);
-        }
+        Log.init();
         Log.info("Loading configuration items.");
         Configuration.loadConfigurationItems();
         Log.info("Loading configuration items done.");

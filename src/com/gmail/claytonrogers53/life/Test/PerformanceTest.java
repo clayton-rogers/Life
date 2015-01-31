@@ -17,14 +17,7 @@ import java.io.IOException;
  */
 public class PerformanceTest {
     public static void main (String[] args) {
-        String logFilename = Log.DEFAULT_FILENAME;
-        try {
-            Log.init(logFilename);
-        } catch (IOException e) {
-            // Logging is important, therefore, do not start without it.
-            e.printStackTrace();
-            System.exit(1);
-        }
+        Log.init();
         Log.info("Loading configuration items.");
         Configuration.loadConfigurationItems();
         Log.info("Loading configuration items done.");

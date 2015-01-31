@@ -11,16 +11,14 @@ import java.io.IOException;
 public class Life {
 
     public static void main (String[] args) {
-        String logFilename = Log.DEFAULT_FILENAME;
+        String logFilename = null;
         if (args.length == 2 && args[0].equals("--log")) {
             logFilename = args[1];
         }
-        try {
+        if (logFilename == null) {
+            Log.init();
+        } else {
             Log.init(logFilename);
-        } catch (IOException e) {
-            // Logging is important, therefore, do not start without it.
-            e.printStackTrace();
-            System.exit(1);
         }
         Log.info("Loading configuration items.");
         Configuration.loadConfigurationItems();
