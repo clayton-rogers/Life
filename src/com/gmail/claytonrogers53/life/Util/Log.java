@@ -1,4 +1,4 @@
-package com.gmail.claytonrogers53.life.Log;
+package com.gmail.claytonrogers53.life.Util;
 
 
 import java.io.BufferedWriter;

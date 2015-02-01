@@ -2,13 +2,13 @@ package com.gmail.claytonrogers53.life.UnitTest;
 
 import static org.junit.Assert.assertEquals;
 
-import com.gmail.claytonrogers53.life.Physics.Vector2D;
+import com.gmail.claytonrogers53.life.Util.Vector2D;
 import org.junit.Test;
 
 import java.util.ArrayList;
 
 /**
- * UnitTest code for the {@link com.gmail.claytonrogers53.life.Physics.Vector2D} class.
+ * UnitTest code for the {@link com.gmail.claytonrogers53.life.Util.Vector2D} class.
  *
  * Created by Clayton on 07/12/2014.
  */

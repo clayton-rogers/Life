@@ -1,7 +1,8 @@
 package com.gmail.claytonrogers53.life.Physics;
 
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Configuration;
+import com.gmail.claytonrogers53.life.Util.Log;
+import com.gmail.claytonrogers53.life.Util.RollingAverage;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -29,6 +30,10 @@ public final class PhysicsSystem implements Runnable {
     private double              physicsMultiplier  = DEFAULT_PHYSICS_MULTIPLIER;
     private volatile boolean    isPhysicsRunning   = true;
     private volatile boolean    isPaused           = false;
+    private RollingAverage<Long>   frameTimeAvg    = new RollingAverage<>(40);
+    private RollingAverage<Double> loadAvg         = new RollingAverage<>(40);
+    public double frameTime;
+    public double load;
     /** The list of physics objects that will be calculated every loop */
     private final Collection<PhysicsThing> physicsList = new ArrayList<>();
 
@@ -108,6 +113,13 @@ public final class PhysicsSystem implements Runnable {
             } catch (InterruptedException e) {
                 stopPhysics();
             }
+            // Record the frame time and load so it can be queried by the graphics system
+            long frameTime = physics_dt-timeToWait;
+            frameTimeAvg.addToPool(frameTime);
+            double load = frameTime/((double)physics_dt) * 100L;
+            loadAvg.addToPool(load);
+            this.frameTime = frameTimeAvg.getAverage();
+            this.load = loadAvg.getAverage();
             endOfLastLoopTime = System.currentTimeMillis();
         }
     }

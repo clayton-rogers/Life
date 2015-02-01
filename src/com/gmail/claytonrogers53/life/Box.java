@@ -3,7 +3,7 @@ package com.gmail.claytonrogers53.life;
 import com.gmail.claytonrogers53.life.Graphics.Drawable;
 import com.gmail.claytonrogers53.life.Graphics.Drawing;
 import com.gmail.claytonrogers53.life.Physics.PhysicsObject2D;
-import com.gmail.claytonrogers53.life.Physics.Vector2D;
+import com.gmail.claytonrogers53.life.Util.Vector2D;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;

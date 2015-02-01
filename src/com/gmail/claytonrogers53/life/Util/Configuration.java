@@ -1,6 +1,4 @@
-package com.gmail.claytonrogers53.life.Configuration;
-
-import com.gmail.claytonrogers53.life.Log.Log;
+package com.gmail.claytonrogers53.life.Util;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -37,6 +35,50 @@ public final class Configuration {
 
     /** The default filename of the configuration file. */
     private static final String DEFAULT_CONFIGURATION_FILENAME = "Life.conf";
+
+    /**
+     * For every valid key - value pair found in the configuration file, a ConfigurationItem object will be created and
+     * placed in the Configuration list.
+     *
+     * Created by Clayton on 16/11/2014.
+     */
+    private static class ConfigurationItem{
+        private final String key;
+        private final String value;
+
+        /**
+         * Creates a new ConfigurationItem with the required values.
+         *
+         * @param key
+         *        The key of the item. This is the value it will be retrieved by.
+         *
+         * @param value
+         *        The value of the item. This is the data.
+         */
+        ConfigurationItem(String key, String value) {
+            this.key         = key;
+            this.value       = value;
+        }
+
+        /**
+         * Allows the configuration system to query the key of the item.
+         *
+         * @return The key of the item.
+         */
+        String getKey() {
+            return key;
+        }
+
+        /**
+         * Allows the configuration system to query the value of the item. Note that the value is always stored as a string
+         * even if it will later be interpreted as something else.
+         *
+         * @return The value of the item.
+         */
+        String getValue() {
+            return value;
+        }
+    }
 
     private Configuration () {}
 

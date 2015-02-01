@@ -1,5 +1,7 @@
 package com.gmail.claytonrogers53.life.Physics;
 
+import com.gmail.claytonrogers53.life.Util.Vector2D;
+
 import java.util.ArrayList;
 import java.util.List;
 

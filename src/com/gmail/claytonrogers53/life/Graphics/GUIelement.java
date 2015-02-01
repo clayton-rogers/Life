@@ -1,6 +1,6 @@
 package com.gmail.claytonrogers53.life.Graphics;
 
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Log;
 
 import java.awt.*;
 

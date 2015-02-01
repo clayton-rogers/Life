@@ -1,22 +1,19 @@
 package com.gmail.claytonrogers53.life.UnitTest;
 
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Configuration;
 import org.junit.Test;
-
-import java.io.IOException;
 
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test code for the {@link com.gmail.claytonrogers53.life.Configuration.Configuration} package.
+ * Test code for the {@link com.gmail.claytonrogers53.life.Util.Configuration} package.
  *
  * Created by Clayton on 9/12/2014.
  */
 public class ConfigurationTest {
 
     /** The allowable difference between floats and doubles. */
-    private static final float DELTA = 0.001f;
+    public static final float DELTA = 0.001f;
 
     @Test
     public void alwaysPasses() {

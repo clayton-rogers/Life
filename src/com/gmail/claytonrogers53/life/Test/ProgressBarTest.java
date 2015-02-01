@@ -1,14 +1,12 @@
 package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Graphics.DrawLoop;
+import com.gmail.claytonrogers53.life.Util.Configuration;
+import com.gmail.claytonrogers53.life.Graphics.GraphicsSystem;
 import com.gmail.claytonrogers53.life.Graphics.ProgressBar;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Log;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
-import com.gmail.claytonrogers53.life.Physics.Vector2D;
-
-import java.io.IOException;
+import com.gmail.claytonrogers53.life.Util.Vector2D;
 
 /**
  * Tests the use of progress bars.
@@ -20,8 +18,8 @@ public class ProgressBarTest {
         Log.init();
         Configuration.loadConfigurationItems();
 
-        DrawLoop drawLoop = new DrawLoop();
-        Thread drawingThread = new Thread(drawLoop);
+        GraphicsSystem graphicsSystem = new GraphicsSystem();
+        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
         Thread physicsThread = new Thread(physicsSystem);
 
@@ -29,13 +27,13 @@ public class ProgressBarTest {
         drawingThread.start();
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
-        drawLoop.addToDrawList(myBox);
+        graphicsSystem.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 
 
         ProgressBar p = new ProgressBar();
         p.setPosition(100,100);
-        drawLoop.addGUIElement(p);
+        graphicsSystem.addGUIElement(p);
 
         try {
             Thread.sleep(1000);

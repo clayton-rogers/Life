@@ -1,14 +1,13 @@
 package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
+import com.gmail.claytonrogers53.life.Util.Configuration;
 import com.gmail.claytonrogers53.life.Graphics.Button;
-import com.gmail.claytonrogers53.life.Graphics.DrawLoop;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Graphics.GraphicsSystem;
+import com.gmail.claytonrogers53.life.Util.Log;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
-import com.gmail.claytonrogers53.life.Physics.Vector2D;
+import com.gmail.claytonrogers53.life.Util.Vector2D;
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 /**
@@ -23,8 +22,8 @@ public class ButtonTest {
         Configuration.loadConfigurationItems();
         Log.info("Loading configuration items done.");
 
-        DrawLoop drawLoop = new DrawLoop();
-        Thread drawingThread = new Thread(drawLoop);
+        GraphicsSystem graphicsSystem = new GraphicsSystem();
+        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
         Thread physicsThread = new Thread(physicsSystem);
 
@@ -32,7 +31,7 @@ public class ButtonTest {
         drawingThread.start();
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
-        drawLoop.addToDrawList(myBox);
+        graphicsSystem.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 
 
@@ -47,7 +46,7 @@ public class ButtonTest {
         });
         b.setPosition(100, 100);
         //b.setHeight(10);
-        drawLoop.addGUIElement(b);
+        graphicsSystem.addGUIElement(b);
 
         Button b2 = new Button();
         b2.setButtonText("A second button.");
@@ -59,7 +58,7 @@ public class ButtonTest {
             }
         });
         b2.setPosition(200, 200);
-        drawLoop.addGUIElement(b2);
+        graphicsSystem.addGUIElement(b2);
 
 
         for (int i = 0; i < 100; ++i) {
@@ -90,8 +89,8 @@ public class ButtonTest {
             Log.error("Main thread was interrupted! Exiting.");
         }
 
-        drawLoop.removeGUIElement(b);
-        drawLoop.removeGUIElement(b2);
-        drawLoop.clearGUIElementList();
+        graphicsSystem.removeGUIElement(b);
+        graphicsSystem.removeGUIElement(b2);
+        graphicsSystem.clearGUIElementList();
     }
 }

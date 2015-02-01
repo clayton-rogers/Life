@@ -1,11 +1,11 @@
 package com.gmail.claytonrogers53.life.UnitTest;
 
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Log;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Test code for the {@link com.gmail.claytonrogers53.life.Log.Log} class.
+ * Test code for the {@link com.gmail.claytonrogers53.life.Util.Log} class.
  *
  * Created by Clayton on 9/12/2014.
  */

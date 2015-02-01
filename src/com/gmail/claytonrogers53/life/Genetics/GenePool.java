@@ -1,6 +1,6 @@
 package com.gmail.claytonrogers53.life.Genetics;
 
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Log;
 
 import java.util.ArrayList;
 import java.util.Collections;

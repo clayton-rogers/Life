@@ -1,13 +1,12 @@
 package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
+import com.gmail.claytonrogers53.life.Util.Configuration;
 import com.gmail.claytonrogers53.life.Graphics.*;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Log;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
-import com.gmail.claytonrogers53.life.Physics.Vector2D;
+import com.gmail.claytonrogers53.life.Util.Vector2D;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.concurrent.Callable;
 
@@ -21,8 +20,8 @@ public class RadioButtonTest {
         Log.init();
         Configuration.loadConfigurationItems();
 
-        DrawLoop drawLoop = new DrawLoop();
-        Thread drawingThread = new Thread(drawLoop);
+        GraphicsSystem graphicsSystem = new GraphicsSystem();
+        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
         Thread physicsThread = new Thread(physicsSystem);
 
@@ -30,7 +29,7 @@ public class RadioButtonTest {
         drawingThread.start();
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
-        drawLoop.addToDrawList(myBox);
+        graphicsSystem.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 
 
@@ -42,11 +41,11 @@ public class RadioButtonTest {
         optionList.add("Option 3 (actually option 2)");
         radioBox.setOptionList(optionList);
         radioBox.setSelectedOption(2);
-        drawLoop.addGUIElement(radioBox);
+        graphicsSystem.addGUIElement(radioBox);
 
         TextBox t = new TextBox();
         t.setPosition(300,100);
-        drawLoop.addGUIElement(t);
+        graphicsSystem.addGUIElement(t);
 
         Button b = new Button();
         b.setPosition(600, 100);
@@ -59,7 +58,7 @@ public class RadioButtonTest {
                 return null;
             }
         });
-        drawLoop.addGUIElement(b);
+        graphicsSystem.addGUIElement(b);
 
         for (int i = 0; i < 1000; i ++) {
 

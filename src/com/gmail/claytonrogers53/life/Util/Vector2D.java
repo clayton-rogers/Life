@@ -1,4 +1,4 @@
-package com.gmail.claytonrogers53.life.Physics;
+package com.gmail.claytonrogers53.life.Util;
 
 import java.util.List;
 

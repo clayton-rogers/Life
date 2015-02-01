@@ -1,14 +1,12 @@
 package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
+import com.gmail.claytonrogers53.life.Util.Configuration;
 import com.gmail.claytonrogers53.life.Graphics.*;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Log;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
-import com.gmail.claytonrogers53.life.Physics.Vector2D;
-import jdk.nashorn.internal.codegen.CompilerConstants;
+import com.gmail.claytonrogers53.life.Util.Vector2D;
 
-import java.io.IOException;
 import java.util.concurrent.Callable;
 
 /**
@@ -21,8 +19,8 @@ public class CheckBoxTest {
         Log.init();
         Configuration.loadConfigurationItems();
 
-        DrawLoop drawLoop = new DrawLoop();
-        Thread drawingThread = new Thread(drawLoop);
+        GraphicsSystem graphicsSystem = new GraphicsSystem();
+        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
         Thread physicsThread = new Thread(physicsSystem);
 
@@ -30,7 +28,7 @@ public class CheckBoxTest {
         drawingThread.start();
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
-        drawLoop.addToDrawList(myBox);
+        graphicsSystem.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 
 
@@ -38,11 +36,11 @@ public class CheckBoxTest {
         c.setCheckBoxText("This is a checkbox!!!");
         c.setState(CheckBox.State.CHECKED);
         c.setPosition(100,100);
-        drawLoop.addGUIElement(c);
+        graphicsSystem.addGUIElement(c);
 
         TextBox t = new TextBox();
         t.setPosition(300,100);
-        drawLoop.addGUIElement(t);
+        graphicsSystem.addGUIElement(t);
 
         Button b = new Button();
         b.setPosition(600, 100);
@@ -55,7 +53,7 @@ public class CheckBoxTest {
                 return null;
             }
         });
-        drawLoop.addGUIElement(b);
+        graphicsSystem.addGUIElement(b);
 
         for (int i = 0; i < 1000; i ++) {
 

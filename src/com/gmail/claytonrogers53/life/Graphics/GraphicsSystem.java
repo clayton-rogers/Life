@@ -1,7 +1,9 @@
 package com.gmail.claytonrogers53.life.Graphics;
 
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
+import com.gmail.claytonrogers53.life.Util.Configuration;
+import com.gmail.claytonrogers53.life.Util.Log;
+import com.gmail.claytonrogers53.life.Util.RollingAverage;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,12 +15,12 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * The draw loop keeps a list of all of the drawable objects and draws them once per frame. It also insures that a
+ * The graphics system keeps a list of all of the drawable objects and draws them once per frame. It also insures that a
  * particular (adjustable) frame rate is used.
  *
  * Created by Clayton on 13/11/2014.
  */
-public final class DrawLoop extends JFrame implements Runnable{
+public final class GraphicsSystem extends JFrame implements Runnable{
 
     /** The default refresh time used if one is not specified in the configuration file. */
     private static final long DEFAULT_DT = 17L;
@@ -60,22 +62,23 @@ public final class DrawLoop extends JFrame implements Runnable{
     private double              panX           = DEFAULT_PAN_X;
     private double              panY           = DEFAULT_PAN_Y;
     private volatile boolean    isDrawing      = true;
-    private long                frameTime      = 0L;
-    private double              gLoad          = 0.0;
+    private RollingAverage<Long>frameTimeAvg   = new RollingAverage<>(40);
+    private RollingAverage<Double> gLoadAvg    = new RollingAverage<>(40);
     private boolean             isFpsDisplayed = false;
 
     /** The list of objects that will be drawn every loop */
-    private final Collection<Drawable> drawableList = new ArrayList<>(20);
+    private final Collection<Drawable> drawableList = new ArrayList<>(40);
     /** The list of all GUI objects on the screen (i.e. objects which do not pan and zoom). */
-    private final Collection<GUIelement> GUIelementList = new ArrayList<>(20);
+    private final Collection<GUIelement> GUIelementList = new ArrayList<>(40);
     /** The list of inputs to be processed. */
     private final Queue<InputMessage> inputMessages = new ConcurrentLinkedQueue<>();
+    private PhysicsSystem physicsSystem;
 
     /**
-     * Constructs a new runnable DrawLoop object. If the window settings are set in the configuration file then they
+     * Constructs a new runnable GraphicsSystem object. If the window settings are set in the configuration file then they
      * are read.
      */
-    public DrawLoop () {
+    public GraphicsSystem() {
 
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
@@ -166,9 +169,12 @@ public final class DrawLoop extends JFrame implements Runnable{
             }
             endOfLastLoopTime = System.currentTimeMillis();
 
-            // Record the fame time and load so that it can be displayed on the next frame
-            frameTime = draw_dt-timeToWait;
-            gLoad = frameTime/((double)draw_dt) * 100L;
+            // Record the frame time and load so that it can be displayed on the next frame
+            long frameTime = draw_dt-timeToWait;
+            frameTimeAvg.addToPool(frameTime);
+            double gLoad = frameTime/((double)draw_dt) * 100L;
+            gLoadAvg.addToPool(gLoad);
+
         }
     }
 
@@ -257,8 +263,13 @@ public final class DrawLoop extends JFrame implements Runnable{
             }
 
             if (isFpsDisplayed) {
-                g.drawString("Frame Time: " + frameTime + " ms", FPS_X_POS, FPS_Y_POS);
-                g.drawString("G Load: " + (int) gLoad + " %", FPS_X_POS, FPS_Y_POS + 15);
+                g.drawString("Frame Time: " + frameTimeAvg.getAverage() + " ms", FPS_X_POS, FPS_Y_POS);
+                g.drawString("G Load: " + (int)gLoadAvg.getAverage() + " %", FPS_X_POS, FPS_Y_POS + 15);
+                if (physicsSystem != null) {
+                    g.drawString("Graphics:", FPS_X_POS, FPS_Y_POS + 30);
+                    g.drawString("Frame Time: " + physicsSystem.frameTime + " ms", FPS_X_POS, FPS_Y_POS+45);
+                    g.drawString("G Load: " + (int)physicsSystem.load + " %", FPS_X_POS, FPS_Y_POS + 60);
+                }
                 // 15 is roughly the text height
             }
         } finally {
@@ -526,5 +537,16 @@ public final class DrawLoop extends JFrame implements Runnable{
                 }
             }
         }
+    }
+
+    /**
+     * Registers a given physics system with the graphics system. Allows the graphics system to query the load of the
+     * physics system.
+     *
+     * @param physicsSystem
+     *        The physics system to register.
+     */
+    public void registerPhysicsSystem(PhysicsSystem physicsSystem) {
+        this.physicsSystem = physicsSystem;
     }
 }

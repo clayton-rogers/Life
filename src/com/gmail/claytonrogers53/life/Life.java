@@ -1,12 +1,10 @@
 package com.gmail.claytonrogers53.life;
 
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Graphics.DrawLoop;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Configuration;
+import com.gmail.claytonrogers53.life.Graphics.GraphicsSystem;
+import com.gmail.claytonrogers53.life.Util.Log;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
-import com.gmail.claytonrogers53.life.Physics.Vector2D;
-
-import java.io.IOException;
+import com.gmail.claytonrogers53.life.Util.Vector2D;
 
 public class Life {
 
@@ -24,16 +22,18 @@ public class Life {
         Configuration.loadConfigurationItems();
         Log.info("Loading configuration items done.");
 
-        DrawLoop drawLoop = new DrawLoop();
-        Thread drawingThread = new Thread(drawLoop);
+        GraphicsSystem graphicsSystem = new GraphicsSystem();
+        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
         Thread physicsThread = new Thread(physicsSystem);
+
+        graphicsSystem.registerPhysicsSystem(physicsSystem);
 
         physicsThread.start();
         drawingThread.start();
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
-        drawLoop.addToDrawList(myBox);
+        graphicsSystem.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 
         try {
@@ -44,12 +44,12 @@ public class Life {
         }
 
         // Call some methods to it stop complaining about them being unused.
-        drawLoop.stopDrawing();
-        drawLoop.removeFromDrawList(myBox);
-        drawLoop.clearDrawList();
-        drawLoop.setPan(0,0);
-        drawLoop.setZoom(1.0);
-        drawLoop.setGraphicsTimeDelta(17);
-        drawLoop.setFPS(60);
+        graphicsSystem.stopDrawing();
+        graphicsSystem.removeFromDrawList(myBox);
+        graphicsSystem.clearDrawList();
+        graphicsSystem.setPan(0,0);
+        graphicsSystem.setZoom(1.0);
+        graphicsSystem.setGraphicsTimeDelta(17);
+        graphicsSystem.setFPS(60);
     }
 }

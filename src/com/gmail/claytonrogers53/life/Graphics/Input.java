@@ -4,7 +4,7 @@ import java.awt.event.*;
 
 /**
  * Handles the panning and scrolling input into the program. Passes the information asynchronously to the draw loop.
- * Other input is handled by registering directly with the DrawLoop (ie. the JFrame.).
+ * Other input is handled by registering directly with the GraphicsSystem (ie. the JFrame.).
  *
  * Created by Clayton on 9/12/2014.
  */
@@ -15,17 +15,17 @@ class Input implements MouseListener, MouseMotionListener, MouseWheelListener {
     private int lastPanX = 0;
     private int lastPanY = 0;
 
-    private final DrawLoop drawLoop;
+    private final GraphicsSystem graphicsSystem;
 
     /**
-     * Allows the DrawLoop to create an instance for itself. It provides a reference to itself so that the input class
+     * Allows the GraphicsSystem to create an instance for itself. It provides a reference to itself so that the input class
      * can pass the scroll and zoom messages to it.
      *
-     * @param drawLoop
-     *        A reference to the creating DrawLoop.
+     * @param graphicsSystem
+     *        A reference to the creating GraphicsSystem.
      */
-    Input(DrawLoop drawLoop) {
-        this.drawLoop = drawLoop;
+    Input(GraphicsSystem graphicsSystem) {
+        this.graphicsSystem = graphicsSystem;
     }
 
     /**
@@ -52,11 +52,11 @@ class Input implements MouseListener, MouseMotionListener, MouseWheelListener {
     @Override
     public void mouseDragged(MouseEvent e) {
         if (button == MouseEvent.BUTTON3) {
-            drawLoop.addToInputQueue(new InputMessage(
+            graphicsSystem.addToInputQueue(new InputMessage(
                     InputMessage.MessageType.SCROLL_X,
                     e.getX() - lastPanX
             ));
-            drawLoop.addToInputQueue(new InputMessage(
+            graphicsSystem.addToInputQueue(new InputMessage(
                     InputMessage.MessageType.SCROLL_Y,
                     e.getY() - lastPanY
             ));
@@ -74,7 +74,7 @@ class Input implements MouseListener, MouseMotionListener, MouseWheelListener {
      */
     @Override
     public void mouseWheelMoved(MouseWheelEvent e) {
-        drawLoop.addToInputQueue(new InputMessage(
+        graphicsSystem.addToInputQueue(new InputMessage(
                 InputMessage.MessageType.ZOOM,
                 e.getPreciseWheelRotation()
         ));
@@ -89,7 +89,7 @@ class Input implements MouseListener, MouseMotionListener, MouseWheelListener {
     @Override
     public void mouseReleased(MouseEvent e) {
         if (button == MouseEvent.BUTTON1) {
-            drawLoop.notifyGUIElementsOfClick(e.getX(), e.getY());
+            graphicsSystem.notifyGUIElementsOfClick(e.getX(), e.getY());
         }
     }
 

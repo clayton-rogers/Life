@@ -1,14 +1,11 @@
 package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
-import com.gmail.claytonrogers53.life.Configuration.Configuration;
-import com.gmail.claytonrogers53.life.Graphics.DrawLoop;
-import com.gmail.claytonrogers53.life.Log.Log;
+import com.gmail.claytonrogers53.life.Util.Configuration;
+import com.gmail.claytonrogers53.life.Graphics.GraphicsSystem;
+import com.gmail.claytonrogers53.life.Util.Log;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
-import com.gmail.claytonrogers53.life.Physics.Vector2D;
-import org.junit.Test;
-
-import java.io.IOException;
+import com.gmail.claytonrogers53.life.Util.Vector2D;
 
 /**
  * Tests the performance of the graphics and physics systems by creating 7000 objects.
@@ -22,16 +19,18 @@ public class PerformanceTest {
         Configuration.loadConfigurationItems();
         Log.info("Loading configuration items done.");
 
-        DrawLoop drawLoop = new DrawLoop();
-        Thread drawingThread = new Thread(drawLoop);
+        GraphicsSystem graphicsSystem = new GraphicsSystem();
+        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
         Thread physicsThread = new Thread(physicsSystem);
+
+        graphicsSystem.registerPhysicsSystem(physicsSystem);
 
         physicsThread.start();
         drawingThread.start();
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
-        drawLoop.addToDrawList(myBox);
+        graphicsSystem.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
         try {
             Thread.sleep(3000);
@@ -48,7 +47,7 @@ public class PerformanceTest {
             double angle = Math.random() * Math.PI * 2.0;
             double angVel = Math.random() * 2.0 - 2.0;
             myBox = new Box(1, 1, new Vector2D(posX,posY), vel, angle, angVel);
-            drawLoop.addToDrawList(myBox);
+            graphicsSystem.addToDrawList(myBox);
             physicsSystem.addToPhysicsList(myBox);
 
             try {
