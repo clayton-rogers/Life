@@ -39,7 +39,7 @@ abstract class GUIelement {
      *
      * @return X component of the left edge.
      */
-    int getLowerX() {
+    public int getLowerX() {
         return xPos;
     }
 
@@ -49,7 +49,7 @@ abstract class GUIelement {
      *
      * @return X component of the right edge.
      */
-    int getUpperX() {
+    public int getUpperX() {
         return xPos + width;
     }
 
@@ -59,7 +59,7 @@ abstract class GUIelement {
      *
      * @return Y component of the top edge.
      */
-    int getUpperY() {
+    public int getUpperY() {
         return yPos;
     }
 
@@ -69,8 +69,26 @@ abstract class GUIelement {
      *
      * @return Y component of the bottom edge.
      */
-    int getLowerY() {
+    public int getLowerY() {
         return yPos + height;
+    }
+
+    /**
+     * Checks whether a given position is within bounds of the GUI element.
+     *
+     * @param xPos
+     *        The x position.
+     *
+     * @param yPos
+     *        The y position.
+     *
+     * @return Whether the position is inside the bounds of the GUI element.
+     */
+    public boolean isWithinBounds(int xPos, int yPos) {
+        return getLowerX() <= xPos &&
+                getUpperX() >= xPos &&
+                getUpperY() <= yPos &&
+                getLowerY() >= yPos;
     }
 
     /**
