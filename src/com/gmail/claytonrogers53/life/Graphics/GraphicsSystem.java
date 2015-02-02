@@ -132,6 +132,19 @@ public final class GraphicsSystem extends JFrame implements Runnable{
             }
         });
 
+        // Resize handler.
+        addComponentListener(new ComponentAdapter() {
+            @Override
+            public void componentResized(ComponentEvent e) {
+                super.componentResized(e);
+
+                synchronized (GraphicsSystem.this) {
+                    height = e.getComponent().getHeight();
+                    width = e.getComponent().getWidth();
+                }
+            }
+        });
+
         graphicsLoop();
         Log.info("Graphics loop exited.");
     }
@@ -148,12 +161,12 @@ public final class GraphicsSystem extends JFrame implements Runnable{
             processInputs();
             drawScreen();
 
-            long timeToWait;
+
             int localDrawDT;
             synchronized (this) {
                 localDrawDT = draw_dt;
             }
-            timeToWait = (endOfLastLoopTime + localDrawDT) - System.currentTimeMillis();
+            long timeToWait = (endOfLastLoopTime + localDrawDT) - System.currentTimeMillis();
             try {
                 if (timeToWait > 0L) {
                     Thread.sleep(timeToWait);
