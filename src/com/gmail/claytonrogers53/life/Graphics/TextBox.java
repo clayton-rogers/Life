@@ -32,6 +32,7 @@ public class TextBox extends GUIelement {
     public TextBox () {
         synchronized (this) {
             updateHeight = true;
+            text = "";
         }
     }
 
