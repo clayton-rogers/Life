@@ -23,28 +23,30 @@ public class Life {
         Log.info("Loading configuration items done.");
 
         GraphicsSystem graphicsSystem = new GraphicsSystem();
-        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
-        Thread physicsThread = new Thread(physicsSystem);
 
         graphicsSystem.registerPhysicsSystem(physicsSystem);
 
-        physicsThread.start();
-        drawingThread.start();
+        graphicsSystem.start();
+        physicsSystem.start();
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
         graphicsSystem.addToDrawList(myBox);
         physicsSystem.addToPhysicsList(myBox);
 
         try {
-            physicsThread.join();
-            drawingThread.join();
+            while (physicsSystem.isPhysicsRunning() && graphicsSystem.isGraphicsRunning()) {
+                Thread.sleep(1000);
+            }
         } catch (InterruptedException e) {
-            Log.error("Main thread was interrupted! Exiting.");
+            Log.error("Main Life thread was interrupted!!!");
         }
 
-        // Call some methods to it stop complaining about them being unused.
+        // Stop both the systems (one will have already stopped).
         graphicsSystem.stopDrawing();
+        physicsSystem.stopPhysics();
+
+        // Call some methods to it stop complaining about them being unused.
         graphicsSystem.removeFromDrawList(myBox);
         graphicsSystem.clearDrawList();
         graphicsSystem.setPan(0,0);

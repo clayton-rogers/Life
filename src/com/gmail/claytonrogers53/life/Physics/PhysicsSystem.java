@@ -28,7 +28,7 @@ public final class PhysicsSystem implements Runnable {
     // Actual instance variables.
     private long                physics_dt         = DEFAULT_PHYSICS_DT;
     private double              physicsMultiplier  = DEFAULT_PHYSICS_MULTIPLIER;
-    private volatile boolean    isPhysicsRunning   = true;
+    private volatile boolean    isPhysicsRunning   = false;
     private volatile boolean    isPaused           = false;
     private RollingAverage<Long>   frameTimeAvg    = new RollingAverage<>(40);
     private RollingAverage<Double> loadAvg         = new RollingAverage<>(40);
@@ -44,6 +44,20 @@ public final class PhysicsSystem implements Runnable {
     public PhysicsSystem() {
         physics_dt        = Configuration.getValueInt   ("PHYSICS_DT",    (int)DEFAULT_PHYSICS_DT);
         physicsMultiplier = Configuration.getValueDouble("PHYSICS_MULTIPLIER", DEFAULT_PHYSICS_MULTIPLIER);
+    }
+
+    /**
+     * Creates and starts the physics thread. Can only be called once.
+     */
+    public void start() {
+        if (isPhysicsRunning) {
+            Log.warning("Tried to start the physics thread after it was already started.");
+            return;
+        }
+
+        isPhysicsRunning = true;
+        Thread physicsThread = new Thread(this);
+        physicsThread.start();
     }
 
     /**
@@ -132,9 +146,9 @@ public final class PhysicsSystem implements Runnable {
      * @see #pausePhysics
      * @see #continuePhysics
      */
-    public boolean isPhysicsRunning() {
+    public boolean isPhysicsPaused() {
         // isPaused is volatile so we don't need to synchronise here.
-        return !isPaused;
+        return isPaused;
     }
 
     /**
@@ -143,6 +157,17 @@ public final class PhysicsSystem implements Runnable {
     public void stopPhysics () {
         isPhysicsRunning = false;
         Log.info("Stopping physics using method \"stopPhysics\"");
+    }
+
+    /**
+     * Allows users to query whether the physics thread has stopped. The physics may be in the stopped state: before
+     * the physics thread has been started with start(), after the physics thread has ended through a call to
+     * stopPhysics(), or after the physics thread has stopped due to an interrupt.
+     *
+     * @return Whether the physics system is in the running state.
+     */
+    public boolean isPhysicsRunning() {
+        return isPhysicsRunning;
     }
 
     /**
@@ -303,7 +328,7 @@ public final class PhysicsSystem implements Runnable {
         synchronized (this) {
             retString += "physics_dt:        " + physics_dt         + NL;
             retString += "physicsMultiplier: " + physicsMultiplier  + NL;
-            retString += "isPhysicsRunning:  " + isPhysicsRunning   + NL;
+            retString += "isPhysicsPaused:  " + isPhysicsRunning   + NL;
             retString += "isPaused:          " + isPaused           + NL;
         }
 

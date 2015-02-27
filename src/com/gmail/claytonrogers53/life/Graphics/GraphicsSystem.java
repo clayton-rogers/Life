@@ -62,7 +62,7 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     private double              zoom           = DEFAULT_ZOOM;
     private double              panX           = DEFAULT_PAN_X;
     private double              panY           = DEFAULT_PAN_Y;
-    private volatile boolean    isDrawing      = true;
+    private volatile boolean    isDrawing      = false;
     private boolean             isFpsDisplayed = false;
     private final RollingAverage<Long>frameTimeAvg   = new RollingAverage<>(40);
     private final RollingAverage<Double> gLoadAvg    = new RollingAverage<>(40);
@@ -102,6 +102,20 @@ public final class GraphicsSystem extends JFrame implements Runnable{
         }
 
         createBufferStrategy(2);
+    }
+
+    /**
+     * Creates and starts the graphics thread. Can only be called once.
+     */
+    public void start() {
+        if (isDrawing) {
+            Log.warning("Tried to start the graphics thread after it was already started.");
+            return;
+        }
+
+        isDrawing = true;
+        Thread graphicsThread = new Thread(this);
+        graphicsThread.start();
     }
 
     /**
@@ -356,6 +370,17 @@ public final class GraphicsSystem extends JFrame implements Runnable{
         isDrawing = false;
         Log.info("Stopping drawing.");
         dispose();
+    }
+
+    /**
+     * Allows users to query whether the graphics thread has stopped. The graphics thread will be in the stopped state
+     * when: before it has been started with start(), after it has ended with a call to stopDrawing(), or after it has
+     * stopped due to an interrupt.
+     *
+     * @return Whether the graphics system is in the running state.
+     */
+    public boolean isGraphicsRunning() {
+        return isDrawing;
     }
 
     /**
