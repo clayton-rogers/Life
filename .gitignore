@@ -4,8 +4,5 @@ CoverageReport/
 
 .idea/workspace.xml
 
-Life.log
-unit_test_log.log
-Conway.log
-
+*.log
 
