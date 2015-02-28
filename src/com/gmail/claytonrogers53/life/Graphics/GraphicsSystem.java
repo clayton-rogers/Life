@@ -401,10 +401,10 @@ public final class GraphicsSystem extends JFrame implements Runnable{
         }
 
         synchronized (drawableList) {
-            if (drawableList.contains(object)) {
+            boolean changed = drawableList.add(object);
+            if (!changed) {
                 Log.warning("Attempted to add an object to the draw list which was already there.");
             } else {
-                drawableList.add(object);
                 Log.info("Added an object to the draw list.");
             }
         }
