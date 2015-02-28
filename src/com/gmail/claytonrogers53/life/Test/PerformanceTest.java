@@ -1,6 +1,7 @@
 package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
+import com.gmail.claytonrogers53.life.Graphics.TextBox;
 import com.gmail.claytonrogers53.life.Util.Configuration;
 import com.gmail.claytonrogers53.life.Graphics.GraphicsSystem;
 import com.gmail.claytonrogers53.life.Util.Log;
@@ -14,41 +15,42 @@ import com.gmail.claytonrogers53.life.Util.Vector2D;
  */
 public class PerformanceTest {
     public static void main (String[] args) {
-        Log.init();
-        Log.info("Loading configuration items.");
+        Log.init("Test.log");
         Configuration.loadConfigurationItems();
-        Log.info("Loading configuration items done.");
 
         GraphicsSystem graphicsSystem = new GraphicsSystem();
-        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
-        Thread physicsThread = new Thread(physicsSystem);
-
         graphicsSystem.registerPhysicsSystem(physicsSystem);
 
-        physicsThread.start();
-        drawingThread.start();
+        physicsSystem.start();
+        graphicsSystem.start();
 
-        Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
+        Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 1.0);
         graphicsSystem.addToDrawList(myBox);
-        physicsSystem.addToPhysicsList(myBox);
+        physicsSystem.addObject(myBox);
+
+        // TODO update all the test to use the new methods.
+
+        TextBox textBox = new TextBox();
+        textBox.setPosition(20,300);
+        graphicsSystem.addGUIElement(textBox);
         try {
             Thread.sleep(3000);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        final int NUM_BOXES = 7000;
+        final int NUM_BOXES = 1000;
         for (int i = 0; i < NUM_BOXES; i++) {
             double posX = 0.0;
             double posY = 0.0;
-            double velX = Math.random() * 2.0 - 1.0;
-            double velY = Math.random() * 2.0 - 1.0;
-            Vector2D vel = Vector2D.getVector2DMagnitudeAndDirection(10.0, Math.random() * 2 * Math.PI);
-            double angle = Math.random() * Math.PI * 2.0;
+            Vector2D vel = Vector2D.getVector2DMagnitudeAndDirection(2.0, Math.random() * 2 * Math.PI);
+            double angle = 0.0;
             double angVel = Math.random() * 2.0 - 2.0;
             myBox = new Box(1, 1, new Vector2D(posX,posY), vel, angle, angVel);
+            myBox.setIsCollidable(true);
             graphicsSystem.addToDrawList(myBox);
-            physicsSystem.addToPhysicsList(myBox);
+            physicsSystem.addObject(myBox);
+            textBox.setText("Number of objects: " + (i+1));
 
             try {
                 Thread.sleep(1);
@@ -59,8 +61,7 @@ public class PerformanceTest {
 
 
         try {
-            physicsThread.join();
-            drawingThread.join();
+            Thread.sleep(1000000000);
         } catch (InterruptedException e) {
             Log.error("Main thread was interrupted! Exiting.");
         }

@@ -14,16 +14,15 @@ import com.gmail.claytonrogers53.life.Util.Vector2D;
  */
 public class TextInputBoxTest {
     public static void main(String[] args) {
-        Log.init();
+        Log.init("Test.log");
         Configuration.loadConfigurationItems();
 
         GraphicsSystem graphicsSystem = new GraphicsSystem();
-        Thread drawingThread = new Thread(graphicsSystem);
         PhysicsSystem physicsSystem = new PhysicsSystem();
-        Thread physicsThread = new Thread(physicsSystem);
+        graphicsSystem.registerPhysicsSystem(physicsSystem);
 
-        physicsThread.start();
-        drawingThread.start();
+        physicsSystem.start();
+        graphicsSystem.start();
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
         graphicsSystem.addToDrawList(myBox);
@@ -52,8 +51,7 @@ public class TextInputBoxTest {
         }
 
         try {
-            physicsThread.join();
-            drawingThread.join();
+            Thread.sleep(1000000000);
         } catch (InterruptedException e) {
             Log.error("Main thread was interrupted! Exiting.");
         }
