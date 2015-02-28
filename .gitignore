@@ -1,7 +1,11 @@
 out/
 JavaDoc/
-Life.log
+CoverageReport/
+
 .idea/workspace.xml
-src/com/gmail/claytonrogers53/life/Experiment/ShapeMover.java
+
+Life.log
 unit_test_log.log
-CoverageReport/*
+Conway.log
+
+
