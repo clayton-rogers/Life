@@ -5,4 +5,5 @@ CoverageReport/
 .idea/workspace.xml
 
 *.log
+*.orig
 
