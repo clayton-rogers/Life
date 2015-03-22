@@ -17,6 +17,8 @@ import java.util.Date;
  * Additionally, DEBUG level will always be logged. They should be used when debugging to be able to grep the logs more
  * easily.
  *
+ * Log init should generally be called before Configuration init.
+ *
  * Created by Clayton on 25/11/2014.
  */
 public final class Log {
@@ -152,7 +154,7 @@ public final class Log {
     }
 
     /**
-     * Logs a warning to the logfile. Warning logs should be generated when something happens that should never happen
+     * Logs a warning to the logfile. Warning logs should be generated when something happens that should never happen.
      * Warning level messages should be used when something has gone wrong but recovery
      * is possible, or if the program runs in a way that is generally ill advised.
      *

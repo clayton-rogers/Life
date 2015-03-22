@@ -26,6 +26,8 @@ import java.util.List;
  * forward slash (//). A default configuration file can be found along with this program under the name
  * "Life.conf.default".
  *
+ * Configuration init should generally be called after Log init.
+ *
  * Created by Clayton on 16/11/2014.
  */
 public final class Configuration {
