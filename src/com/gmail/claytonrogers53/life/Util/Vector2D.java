@@ -124,14 +124,6 @@ public class Vector2D {
         return value;
     }
 
-//    public void setMagX(double magX) {
-//        this.magX = magX;
-//    }
-
-//    public void setMagY(double magY) {
-//        this.magY = magY;
-//    }
-
     /**
      * Allows for an easy way of printing the vector. Returns a string in the format:
      * Vector2D{magX=<i>mag_x</i>, magY=<i>mag_y</i>}
@@ -261,5 +253,31 @@ public class Vector2D {
     public void set(double x, double y) {
         this.magX = x;
         this.magY = y;
+    }
+
+    /**
+     * Returns the dot product of the two vectors.
+     *
+     * @param other
+     *        The other vector.
+     *
+     * @return The dot product.
+     */
+    public double dotProduct(Vector2D other) {
+        double dotProduct = this.getMagX() * other.getMagX();
+        dotProduct += this.getMagY() * other.getMagY();
+        return dotProduct;
+    }
+
+    /**
+     * Returns the vector of the same length but opposite direction.
+     *
+     * @return The opposite vector.
+     */
+    public Vector2D opposite () {
+        return new Vector2D(
+          this.getMagX() * -1,
+          this.getMagY() * -1
+        );
     }
 }
