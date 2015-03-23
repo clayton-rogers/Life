@@ -1,9 +1,11 @@
 package com.gmail.claytonrogers53.life.example.conway;
 
-import com.gmail.claytonrogers53.life.Graphics.GraphicsSystem;
+import com.gmail.claytonrogers53.life.Graphics.Drawable;
+import com.gmail.claytonrogers53.life.Graphics.Drawing;
 import com.gmail.claytonrogers53.life.Physics.PhysicsThing;
-import com.gmail.claytonrogers53.life.Util.Vector2D;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.Random;
 
 /**
@@ -11,10 +13,14 @@ import java.util.Random;
  *
  * Created by Clayton on 27/2/2015.
  */
-public class Board implements PhysicsThing{
+public class Board implements PhysicsThing, Drawable{
+
+    private final Drawing drawing = new Drawing();
 
     /** All of the cells of the board */
     private final Cell[] cells;
+    private final int width;
+    private final int height;
     /** The current generation number. */
     private int stepNumber;
     /** A random instance used to randomize the cells. */
@@ -24,32 +30,32 @@ public class Board implements PhysicsThing{
      * Creates a board with the given dimensions. Requires a reference to the graphics system so that it can add all of
      * the cells to the draw loop.
      *
-     * @param xCells
+     * @param width
      *        The number of cells in the x direction (width).
      *
-     * @param yCells
+     * @param height
      *        The number of cells in the y direction (height).
-     *
-     * @param graphicsSystem
-     *        A reference to the graphics system.
      */
-    public Board (int xCells, int yCells, GraphicsSystem graphicsSystem) {
-        Cell edge = new Cell(new Vector2D());
+    public Board (int width, int height) {
+        this.width = width;
+        this.height = height;
+
+        Cell edge = new Cell();
         edge.setIsAlive(false);
 
         // Allocate the array for the cells
-        cells = new Cell[xCells*yCells];
+        cells = new Cell[width*height];
 
         // Allocate all the cells
-        for (int x = 0; x < xCells; x++) {
-            for (int y = 0; y < yCells; y++) {
-                cells[x+y*xCells] = new Cell(new Vector2D(x, y));
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
+                cells[x+y*width] = new Cell();
             }
         }
 
         // Figure out the neighbours of all the cells
-        for (int x = 0; x < xCells; x++) {
-            for (int y = 0; y < yCells; y++) {
+        for (int x = 0; x < width; x++) {
+            for (int y = 0; y < height; y++) {
                 Cell[] neighbours = new Cell[8];
 
                 // If bottom edge (x and y are in world coordinates)
@@ -60,7 +66,7 @@ public class Board implements PhysicsThing{
                 }
 
                 // If top edge
-                if (y == yCells-1) {
+                if (y == height-1) {
                     neighbours[5] = edge;
                     neighbours[6] = edge;
                     neighbours[7] = edge;
@@ -74,7 +80,7 @@ public class Board implements PhysicsThing{
                 }
 
                 // If right edge
-                if (x == xCells-1) {
+                if (x == width-1) {
                     neighbours[2] = edge;
                     neighbours[4] = edge;
                     neighbours[7] = edge;
@@ -82,17 +88,26 @@ public class Board implements PhysicsThing{
 
                 for (int i = 0; i < 8; i++) {
                     if (neighbours[i] == null) {
-                        neighbours[i] = getNeighbour(x, y, i, xCells);
+                        neighbours[i] = getNeighbour(x, y, i, width);
                     }
                 }
-                cells[x + y*xCells].setNeighbours(neighbours);
+                cells[x + y*width].setNeighbours(neighbours);
             }
         }
 
-        // Add all the cells to the draw list
-        for (Cell cell : cells) {
-            graphicsSystem.addToDrawList(cell);
-        }
+        initialiseDrawing();
+    }
+
+    /**
+     * Creates the drawing at the center of the screen and allocates space for the graphic.
+     */
+    private void initialiseDrawing() {
+        drawing.xPosition = 0.0;
+        drawing.yPosition = 0.0;
+        drawing.rotation = 0.0;
+        drawing.spriteZoom = 1.0;
+
+        drawing.sprite = new BufferedImage(width, height, BufferedImage.TYPE_INT_RGB);
     }
 
     /**
@@ -168,5 +183,33 @@ public class Board implements PhysicsThing{
      */
     public int getStepNumber() {
         return stepNumber;
+    }
+
+    @Override
+    public Drawing getDrawing() {
+
+        drawing.xPosition  = 0.0;
+        drawing.yPosition  = 0.0;
+        drawing.rotation   = 0.0;
+        drawing.spriteZoom = 1.0;
+
+        Graphics g = drawing.sprite.getGraphics();
+
+        // Clear the screen.
+        g.setColor(Color.WHITE);
+        g.fillRect(0, 0, width, height);
+
+        for (int i = 0; i < width; i++) {
+            for (int j = 0; j < height; j++) {
+                if (cells[i + j*width].isAlive()) {
+                    g.setColor(Color.BLUE);
+                } else {
+                    g.setColor(Color.BLACK);
+                }
+                g.fillRect(i,j,1,1);
+            }
+        }
+
+        return drawing;
     }
 }

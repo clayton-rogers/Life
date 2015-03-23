@@ -23,7 +23,8 @@ public final class ConwayGameOfLife {
 
         graphicsSystem.setZoom(5.0);
 
-        Board board = new Board(300, 300, graphicsSystem);
+        Board board = new Board(300, 300);
+        graphicsSystem.addToDrawList(board);
         board.randomizeCells();
         physicsSystem.addPhysicsThing(board);
 
