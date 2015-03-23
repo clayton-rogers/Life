@@ -10,7 +10,8 @@ import java.util.List;
 public class Vector2D {
 
     /** The internal representation of the vector. */
-    private double magX, magY;
+    private double magX;
+    private double magY;
 
     /**
      * Constructs a 2D vector from the given components.
@@ -56,12 +57,8 @@ public class Vector2D {
      * @return A new vector with the given direction and magnitude.
      */
     public static Vector2D getVector2DMagnitudeAndDirection (double magnitude, double direction) {
-        while (direction < 0) {
-            direction += 2 * Math.PI;
-        }
-        while (direction > 2 * Math.PI) {
-            direction -= 2 * Math.PI;
-        }
+
+        direction = Util.normaliseAngle(direction);
 
         double xComponent = Math.sin(direction) * magnitude;
         double yComponent = Math.cos(direction) * magnitude;
@@ -146,7 +143,7 @@ public class Vector2D {
      *
      * @return The result of the summation.
      */
-    public static Vector2D getSumOfVectors (List<Vector2D> vectorList) {
+    public static Vector2D getSumOfVectors (Iterable<Vector2D> vectorList) {
         Vector2D outputVector = new Vector2D(0.0, 0.0);
 
         for (Vector2D v : vectorList) {
@@ -279,5 +276,42 @@ public class Vector2D {
           this.getMagX() * -1,
           this.getMagY() * -1
         );
+    }
+
+    /**
+     * Determines the projection of this vector onto the other vector. The return will be a scalar multiple of the
+     * other vector.
+     *
+     * @param other
+     *        The vector to be projected onto.
+     *
+     * @return The projected vector.
+     */
+    public Vector2D projectOnto (Vector2D other) {
+        //See:
+        // http://en.wikipedia.org/wiki/Vector_projection#Vector_projection_2
+
+        double numerator = this.dotProduct(other);
+        double denominator = other.dotProduct(other);
+
+        return other.scalarMultiply(numerator/denominator);
+    }
+
+    /**
+     * Reflect the vector along the given normal.
+     *
+     * @param normal
+     *        Reflects 'this' along the normal.
+     *
+     * @return The reflected vector. This will have the same magnitude as the original.
+     */
+    public Vector2D reflectAlong (Vector2D normal) {
+        // See:
+        // http://en.wikipedia.org/wiki/Reflection_%28mathematics%29#Reflection_across_a_line_in_the_plane
+
+        Vector2D temp = this.projectOnto(normal);
+        temp = temp.scalarMultiply(2.0);
+
+        return temp.sub(this);
     }
 }
