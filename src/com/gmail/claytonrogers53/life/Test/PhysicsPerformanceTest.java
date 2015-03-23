@@ -13,7 +13,7 @@ import com.gmail.claytonrogers53.life.Util.Vector2D;
  *
  * Created by Clayton on 14/12/2014.
  */
-public class PerformanceTest {
+public class PhysicsPerformanceTest {
     public static void main (String[] args) {
         Log.init("Test.log");
         Configuration.loadConfigurationItems();
@@ -29,9 +29,9 @@ public class PerformanceTest {
         graphicsSystem.addToDrawList(myBox);
         physicsSystem.addObject(myBox);
 
-        // TODO update all the test to use the new methods.
-
         TextBox textBox = new TextBox();
+        textBox.setPosition(20,300);
+        graphicsSystem.addGUIElement(textBox);
         textBox.setPosition(20,300);
         graphicsSystem.addGUIElement(textBox);
         try {

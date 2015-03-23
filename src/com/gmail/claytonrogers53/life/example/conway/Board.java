@@ -147,7 +147,7 @@ public class Board implements PhysicsThing{
      * @param deltaT Unused.
      */
     @Override
-    public void stepPhysics(double deltaT) {
+    public void calculatePhysics(double deltaT) {
         // Figure out if each cell is alive in the next round.
         for (Cell cell : cells) {
             cell.step();

@@ -25,7 +25,7 @@ public final class ConwayGameOfLife {
 
         Board board = new Board(300, 300, graphicsSystem);
         board.randomizeCells();
-        physicsSystem.addToPhysicsList(board);
+        physicsSystem.addPhysicsThing(board);
 
         graphicsSystem.start();
         physicsSystem.start();

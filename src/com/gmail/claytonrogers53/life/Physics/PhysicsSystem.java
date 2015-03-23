@@ -6,6 +6,7 @@ import com.gmail.claytonrogers53.life.Util.RollingAverage;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 /**
  * The physics system keeps track of all of the physics objects and updates them once every physics loop. The actual
@@ -34,8 +35,13 @@ public final class PhysicsSystem implements Runnable {
     private RollingAverage<Double> loadAvg         = new RollingAverage<>(40);
     public double frameTime;
     public double load;
-    /** The list of physics objects that will be calculated every loop */
-    private final Collection<PhysicsThing> physicsList = new ArrayList<>();
+    /** The lists of physics objects that will be calculated every loop */
+    /** The list of non object physics things that need to be calculated every loop. ex. gravity, some game mechanic.*/
+    private final Collection<PhysicsThing> physicsThings = new ArrayList<>(100);
+    /** The list of objects that propagates and can (potentially) collide. */
+    private final List<Collidable>         objects       = new ArrayList<>(100);
+    /** The system which detects all of the collisions between objects */
+    private final CollisionSystem collisionSystem = new AABBCollision();
 
     /**
      * Constructs a new physics systems object. The physics system reference should then be given to a new Thread
@@ -80,6 +86,12 @@ public final class PhysicsSystem implements Runnable {
         long endOfLastLoopTime = System.currentTimeMillis();
 
         while (isPhysicsRunning) {
+            final long localPhysics_dt;
+            synchronized (this) {
+                // We need to keep the physics dt the same for every physics object, but we don't want to lock
+                // "this" for the entire physics time.
+                localPhysics_dt = physics_dt;
+            }
 
             // If the physics is paused we just want to wait around for a bit, then check again if we are paused or
             // if the physics has stopped running.
@@ -87,54 +99,113 @@ public final class PhysicsSystem implements Runnable {
                 try {
                     // Since the default dt will always be something small but reasonable will will use it as our sleep
                     // time.
-                    Thread.sleep(PhysicsSystem.DEFAULT_PHYSICS_DT);
+                    Thread.sleep(localPhysics_dt);
                 } catch (InterruptedException e) {
                     // If something actively interrupts the physics thread, they probably want it to stop.
                     stopPhysics();
                 }
-            }
+            } else {
 
-            // Step the physics for every object in our list.
-            // Note that the actually physics implementation is left up the the physics object itself.
-            synchronized (physicsList) {
-                final long localPhysics_dt;
+                step(localPhysics_dt);
+
+                // After physics calculations have completed, there still may be lots of time left in the frame. So we will
+                // wait until the frame has expired. The time to wait is the time left in the current frame.
+                long timeToWait;
                 synchronized (this) {
-                    // We need to keep the physics dt the same for every physics object, but we don't want to lock
-                    // "this" for the entire physics time.
-                    localPhysics_dt = physics_dt;
+                    timeToWait = (endOfLastLoopTime + (long) (physics_dt / physicsMultiplier)) - System.currentTimeMillis();
                 }
-                for (PhysicsThing po : physicsList) {
-                    po.stepPhysics(localPhysics_dt * PhysicsSystem.MILLISECOND_TO_SECOND);  // physics works with seconds
+                try {
+                    if (timeToWait > 0) {
+                        Thread.sleep(timeToWait);
+                    } else {
+                        // If the physics thread is overloaded and never sleeps, we still need to check if we have been
+                        // interrupted so that we will stop when we have.
+                        if (Thread.interrupted()) {
+                            stopPhysics();
+                        }
+                    }
+                } catch (InterruptedException e) {
+                    stopPhysics();
                 }
-            }
+                endOfLastLoopTime = System.currentTimeMillis();
+                // Record the frame time and load so it can be queried by the graphics system
+                long frameTime = physics_dt - timeToWait;
+                frameTimeAvg.addToPool(frameTime);
+                double load = frameTime / ((double) physics_dt) * 100L;
+                loadAvg.addToPool(load);
+                this.frameTime = frameTimeAvg.getAverage();
+                this.load = loadAvg.getAverage();
 
-            // After physics calculations have completed, there still may be lots of time left in the frame. So we will
-            // wait until the frame has expired. The time to wait is the time left in the current frame.
-            long timeToWait;
-            synchronized (this) {
-                timeToWait = (endOfLastLoopTime + (long) (physics_dt / physicsMultiplier)) - System.currentTimeMillis();
             }
-            try {
-                if (timeToWait > 0) {
-                    Thread.sleep(timeToWait);
-                } else {
-                    // If the physics thread is overloaded and never sleeps, we still need to check if we have been
-                    // interrupted so that we will stop when we have.
-                    if (Thread.interrupted()) {
-                        stopPhysics();
+        }
+    }
+
+
+    /**
+     * Steps the physics forwards by a given time step. This is automatically called every physics loop, but can also
+     * be manually called.
+     *
+     * @param stepPhysics_dt
+     *        The length of the physics time step (ms).
+     */
+    public void step(long stepPhysics_dt) {
+        /** The list of possible collisions. */
+        List<Collision> collisions;
+        // Propagate and calculate collisions for all of the objects.
+        synchronized (objects) {
+            double physicsDT_seconds = stepPhysics_dt * MILLISECOND_TO_SECOND;
+            for (;;) {
+                // Calculate the next steps of the
+                for (Collidable object : objects) {
+                    object.calculateNextState(physicsDT_seconds);
+                }
+
+                collisions = collisionSystem.findCollisions(objects, physicsDT_seconds);
+
+                // Remove all the false positives
+                for (Collision collision : collisions) {
+                    if (!collision.isCollision()) {
+                        collisions.remove(collision);
                     }
                 }
-            } catch (InterruptedException e) {
-                stopPhysics();
+
+                // If there are no collisions, then we're done
+                if (collisions.size() == 0) {break;}
+
+                // Find the first collision
+                Collision earliestCollision = collisions.get(0);
+                for (Collision collision : collisions) {
+                    if (collision.getCollisionTime() < earliestCollision.getCollisionTime()) {
+                        earliestCollision = collision;
+                    }
+                }
+
+                // Move all the objects forward to the collision time
+                for (Collidable object : objects) {
+                    object.calculateNextState(earliestCollision.getCollisionTime());
+                    object.applyNextState();
+                }
+                physicsDT_seconds -= earliestCollision.getCollisionTime();
+
+                // Evaluate the first collision
+                earliestCollision.resolveCollision();
+
+                // The next loop starts with the remaining time for this loop.
             }
-            // Record the frame time and load so it can be queried by the graphics system
-            long frameTime = physics_dt-timeToWait;
-            frameTimeAvg.addToPool(frameTime);
-            double load = frameTime/((double)physics_dt) * 100L;
-            loadAvg.addToPool(load);
-            this.frameTime = frameTimeAvg.getAverage();
-            this.load = loadAvg.getAverage();
-            endOfLastLoopTime = System.currentTimeMillis();
+
+            // Move all the objects forward to the end of the physics time
+            for (Collidable object : objects) {
+                object.calculateNextState(physicsDT_seconds);
+                object.applyNextState();
+            }
+        }
+        // TODO: look over this section.
+
+        // Physics things are non objects which still want to have some physics calculated.
+        synchronized (physicsThings) {
+            for (PhysicsThing po : physicsThings) {
+                po.calculatePhysics(stepPhysics_dt * MILLISECOND_TO_SECOND);  // physics works with seconds
+            }
         }
     }
 
@@ -171,48 +242,112 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Adds an objects to the physics calculation list. The object will continue being calculated until it is removed
-     * from the physics system with removeFromPhysicsList or the physics list is cleared with clearPhysicsList. If an
-     * object is already in the physics list, it will be ignored.
+     * Adds an objects to the physics thing calculation list. The object will continue being calculated until it is
+     * removed from the physics thing list with removePhysicsThing or the physics list is cleared with
+     * clearPhysicsThings. If an object is already in the physics thing list, it will be ignored.
+     *
+     * Physics things should be used for non object things which need to be calculated every time step.
      *
      * @param object
-     *        The physics object to be added to the list.
+     *        The physics thing to be added to the list.
      *
-     * @see #removeFromPhysicsList
-     * @see #clearPhysicsList
+     * @see #removePhysicsThing
+     * @see #clearPhysicsThings
      */
-    public void addToPhysicsList (PhysicsThing object) {
+    public void addPhysicsThing(PhysicsThing object) {
         if (null == object) {
-            Log.error("Attempted to add a null object to the physics list.");
+            Log.error("Attempted to add a null object to the physics things list.");
             return;
         }
 
-        synchronized (physicsList) {
-            if (!physicsList.contains(object)) {
-                physicsList.add(object);
-                Log.info("Adding a physics object to the physics list.");
+        synchronized (physicsThings) {
+            if (!physicsThings.contains(object)) {
+                physicsThings.add(object);
+                Log.info("Adding a physics thing to the list.");
             } else {
-                Log.warning("Attempted to add a physics object to the physics list that was already there.");
+                Log.warning("Attempted to add a physics things to the list that was already there.");
             }
         }
     }
 
     /**
-     * Removes the given object form the physics list.
+     * Removes the given physics thing form the list.
      *
      * @param object
-     *        The object to be removed from the physics list.
+     *        The thing to be removed from the list.
      *
-     * @see #clearPhysicsList
+     * @see #clearPhysicsThings
      */
-    public void removeFromPhysicsList (PhysicsThing object) {
+    public void removePhysicsThing(PhysicsThing object) {
         if (null == object) {
-            Log.error("Attempted to remove a null object from the physics list.");
+            Log.error("Attempted to remove a null object from the physics things list.");
             return;
         }
 
-        synchronized (physicsList) {
-            boolean didRemoveDoAnything = physicsList.remove(object);
+        synchronized (physicsThings) {
+            boolean didRemoveDoAnything = physicsThings.remove(object);
+            if (!didRemoveDoAnything) {
+                Log.warning("Attempted to remove a physics things from the list that wasn't there.");
+            } else {
+                Log.info("Removed a physics thing from the list.");
+            }
+        }
+    }
+
+    /**
+     * Clears every object out of the physics thing list. This method should generally not be used unless you really
+     * want all the physics things to stop simulating (and potentially add new ones). It will have better performance
+     * than calling removePhysicsThing on every object.
+     *
+     * @see #removePhysicsThing
+     */
+    public void clearPhysicsThings() {
+        synchronized (physicsThings) {
+            physicsThings.clear();
+            Log.info("Clearing the physics things list.");
+        }
+    }
+
+    /**
+     * Adds an object to the physics system. The object will continue being calculated until it is
+     * removed from the physics thing list with removeObject or the physics list is cleared with
+     * clearObjects. If an object is already in the object list, it will be ignored.
+     *
+     * Objects propagate through space and (potentially) collide.
+     *
+     * @param object
+     *        The object to be added to the system.
+     */
+    public void addObject (Collidable object) {
+        if (null == object) {
+            Log.error("Attempted to add a null object to the physics system.");
+            return;
+        }
+
+        synchronized (objects) {
+            if (!objects.contains(object)) {
+                objects.add(object);
+                Log.info("Adding an object to the physics system.");
+            } else {
+                Log.warning("Attempted to add an object to the physics list that was already there.");
+            }
+        }
+    }
+
+    /**
+     * Removes the given object from the physics system.
+     *
+     * @param object
+     *        The object to be removed from the system.
+     */
+    public void removeObject(Collidable object) {
+        if (null == object) {
+            Log.error("Attempted to remove a null object from the physics system.");
+            return;
+        }
+
+        synchronized (objects) {
+            boolean didRemoveDoAnything = objects.remove(object);
             if (!didRemoveDoAnything) {
                 Log.warning("Attempted to remove an object from the physics list that wasn't there.");
             } else {
@@ -222,28 +357,15 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Clears every object out of the physics list. This method should generally not be used unless you really want all
-     * the physics objects to stop simulating (and potentially add new ones). It will have better performance than
-     * calling removeFromPhysicsList on every object.
+     * Clears every object out of the physics list. This method should generally not be used unless you really
+     * want all the objects to stop simulating (and potentially add new ones). It will have better performance
+     * than calling removeObject on every object.
      *
-     * @see #removeFromPhysicsList
      */
-    public void clearPhysicsList () {
-        synchronized (physicsList) {
-            physicsList.clear();
-            Log.info("Clearing the physics list.");
-        }
-    }
-
-    /**
-     * Allows users to query the current number of physics objects being simulated. Generally only useful for
-     * debugging, or for performance metrics.
-     *
-     * @return The current number of objects in the physics list.
-     */
-    public int getNumberOfPhysicsObjects () {
-        synchronized (physicsList) {
-            return physicsList.size();
+    public void clearObjects() {
+        synchronized (objects) {
+            objects.clear();
+            Log.info("Clearing the physics things list.");
         }
     }
 
@@ -328,12 +450,12 @@ public final class PhysicsSystem implements Runnable {
         synchronized (this) {
             retString += "physics_dt:        " + physics_dt         + NL;
             retString += "physicsMultiplier: " + physicsMultiplier  + NL;
-            retString += "isPhysicsPaused:  " + isPhysicsRunning   + NL;
+            retString += "isPhysicsRunning:  " + isPhysicsRunning   + NL;
             retString += "isPaused:          " + isPaused           + NL;
         }
 
-        synchronized (physicsList) {
-            retString += "numPhysicsObj:    " + physicsList.size()  + NL;
+        synchronized (physicsThings) {
+            retString += "numPhysicsObj:    " + physicsThings.size()  + NL;
         }
 
         return retString;

@@ -14,5 +14,5 @@ public interface PhysicsThing {
      * @param deltaT
      *        The time step size in s.
      */
-    void stepPhysics (double deltaT);
+    void calculatePhysics (double deltaT);
 }

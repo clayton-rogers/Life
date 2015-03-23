@@ -26,7 +26,7 @@ public class TextInputBoxTest {
 
         Box myBox = new Box(1, 1, new Vector2D(0.0, 0.0), new Vector2D(0.0, 0.0), 0.0, 0.0);
         graphicsSystem.addToDrawList(myBox);
-        physicsSystem.addToPhysicsList(myBox);
+        physicsSystem.addObject(myBox);
 
 
         TextInputBox tib = new TextInputBox();
