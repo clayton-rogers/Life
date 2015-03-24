@@ -9,14 +9,11 @@ import com.gmail.claytonrogers53.life.Util.Vector2D;
 public class Life {
 
     public static void main (String[] args) {
-        String logFilename = null;
         if (args.length == 2 && args[0].equals("--log")) {
-            logFilename = args[1];
-        }
-        if (logFilename == null) {
-            Log.init();
-        } else {
+            String logFilename = args[1];
             Log.init(logFilename);
+        } else {
+            Log.init();
         }
         Log.info("Loading configuration items.");
         Configuration.loadConfigurationItems();
