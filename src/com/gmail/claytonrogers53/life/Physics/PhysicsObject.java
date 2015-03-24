@@ -50,6 +50,12 @@ public abstract class PhysicsObject implements Collidable {
 
     @Override
     public void applyNextState() {
+
+        if (!isNextStateValid) {
+            String errorString = "Tried to apply the next state when it is not valid.";
+            Log.error(errorString);
+            throw new IllegalStateException(errorString);
+        }
         // Simply swap the current and next state since the next
         State temp = state;
         state = nextState;
