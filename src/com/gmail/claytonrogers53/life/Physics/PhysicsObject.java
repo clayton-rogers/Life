@@ -67,7 +67,7 @@ public abstract class PhysicsObject implements Collidable {
     public void calculateNextState(double time) {
         nextState.position = state.position.add(state.velocity.scalarMultiply(time));
         nextState.velocity.set(state.velocity);
-        nextState.angle += state.angularVelocity * time;
+        nextState.angle = state.angle + state.angularVelocity * time;
         nextState.angularVelocity = state.angularVelocity;
         isNextStateValid = true;
     }
