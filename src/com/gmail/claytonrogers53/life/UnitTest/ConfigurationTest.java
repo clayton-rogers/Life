@@ -39,7 +39,7 @@ public class ConfigurationTest {
         assertEquals(expectedDouble, actualDouble, DELTA);
 
         actualInt = Configuration.getValueInt("PHYSICS_DT", 154);
-        expectedInt = 16;
+        expectedInt = 10;
         assertEquals(expectedInt, actualInt);
     }
 
