@@ -70,8 +70,8 @@ public class Cell {
     }
 
     /**
-     * Uses the number of neighbours, the rules of life, and whether the cell is alive or dead to determine whether the
-     * cell should be alive in the next time step.
+     * Uses the number of neighbours, the rules of life, and whether the cell is alive or dead to
+     * determine whether the cell should be alive in the next time step.
      *
      * @param numberNeighbours
      *        The number of neighbours which are currently alive.

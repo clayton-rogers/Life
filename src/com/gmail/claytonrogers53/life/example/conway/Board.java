@@ -27,8 +27,8 @@ public class Board implements PhysicsThing, Drawable{
     private static final Random RANDOM = new Random();
 
     /**
-     * Creates a board with the given dimensions. Requires a reference to the graphics system so that it can add all of
-     * the cells to the draw loop.
+     * Creates a board with the given dimensions. Requires a reference to the graphics system so
+     * that it can add all of the cells to the draw loop.
      *
      * @param width
      *        The number of cells in the x direction (width).

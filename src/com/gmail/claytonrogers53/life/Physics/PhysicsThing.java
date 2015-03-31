@@ -7,9 +7,9 @@ package com.gmail.claytonrogers53.life.Physics;
  */
 public interface PhysicsThing {
     /**
-     * The method is called once every physics loop when the object is registered with the physics system. It is
-     * expected that an object which implements this interface will be able to propagate in some way in time, and is
-     * expected to do so when this method is called.
+     * The method is called once every physics loop when the object is registered with the physics
+     * system. It is expected that an object which implements this interface will be able to
+     * propagate in some way in time, and is expected to do so when this method is called.
      *
      * @param deltaT
      *        The time step size in s.

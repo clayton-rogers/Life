@@ -6,8 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Implements the brute force method of finding collisions. It checks every object against every other object to see if
- * their bounding circles overlap.
+ * Implements the brute force method of finding collisions. It checks every object against every
+ * other object to see if their bounding circles overlap.
  *
  * Created by Clayton on 25/2/2015.
  */

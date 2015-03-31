@@ -7,8 +7,8 @@ package com.gmail.claytonrogers53.life.Graphics;
  */
 public interface Drawable {
     /**
-     * Gets the drawing object from the given drawable object. The drawing object contains information about the
-     * position, the scale and rotation and the actual sprite to be drawn.
+     * Gets the drawing object from the given drawable object. The drawing object contains
+     * information about the position, the scale and rotation and the actual sprite to be drawn.
      *
      * @return The drawing object to be drawn.
      */

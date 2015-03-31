@@ -7,7 +7,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Contains a large number of genetic individuals. Controls the operations which can be run on those individuals.
+ * Contains a large number of genetic individuals. Controls the operations which can be run on
+ * those individuals.
  *
  * Created by Clayton on 15/11/2014.
  */
@@ -45,8 +46,8 @@ public final class GenePool {
     }
 
     /**
-     * Allows the user to query for every individual in the GenePool. The individuals are then evaluated and their
-     * fitness is set. The list of genome should not be otherwise modified.
+     * Allows the user to query for every individual in the GenePool. The individuals are then
+     * evaluated and their fitness is set. The list of genome should not be otherwise modified.
      *
      * @return The list of genome currently in the GenePool.
      */
@@ -55,9 +56,9 @@ public final class GenePool {
     }
 
     /**
-     * Calculates using genetic algorithms what the individuals in the next generation should be, based on genes of
-     * the current generation and their fitness. The algorithm is subject to change in the future, more customization
-     * options will likely be added.
+     * Calculates using genetic algorithms what the individuals in the next generation should be,
+     * based on genes of the current generation and their fitness. The algorithm is subject to
+     * change in the future, more customization options will likely be added.
      */
     public void nextGeneration () {
         generation++;
@@ -89,8 +90,8 @@ public final class GenePool {
 
 
     /**
-     * Allows the user to completely clear the genomes from the gene pool and reset the generation number. This should
-     * generally not be used. Instead a new gene pool should just be created.
+     * Allows the user to completely clear the genomes from the gene pool and reset the generation
+     * number. This should generally not be used. Instead a new gene pool should just be created.
      */
     public void clear () {
         Log.info("Entire gene pool cleared.");
@@ -113,8 +114,9 @@ public final class GenePool {
 
         Genome returnGenome;
 
-        // We will mix either the first half of the first input with the second half of the second input, or we will
-        // combine the first half of the second input with the second half of the first input.
+        // We will mix either the first half of the first input with the second half of the second
+        // input, or we will combine the first half of the second input with the second half of the
+        // first input.
         if ((int) (Math.random()*2) == 1) {
             // First half of the first input.
 
@@ -144,8 +146,8 @@ public final class GenePool {
     }
 
     /**
-     * Steps through the population till it finds the member defined by a random number. This is where the fitness
-     * proportional selection is done.
+     * Steps through the population till it finds the member defined by a random number. This is
+     * where the fitness proportional selection is done.
      *
      * @param populationFitness
      *        The total fitness of the entire population.

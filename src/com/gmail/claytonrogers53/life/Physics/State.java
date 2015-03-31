@@ -22,7 +22,8 @@ public class State {
     public double angularVelocity = 0.0;
 
     /**
-     * Converts a position in local object coordinates to world position coordinates using the object's state.
+     * Converts a position in local object coordinates to world position coordinates using the
+     * object's state.
      *
      * @param localPosition
      *        The position in local coordinates (m)

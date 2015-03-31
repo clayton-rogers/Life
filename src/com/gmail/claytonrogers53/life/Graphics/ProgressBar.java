@@ -52,8 +52,8 @@ public class ProgressBar extends GUIelement {
     }
 
     /**
-     * Sets the current progress of the progress bar. Does not have to always increase. Should be a value between 0 and
-     * 100.
+     * Sets the current progress of the progress bar. Does not have to always increase. Should be a
+     * value between 0 and 100.
      *
      * @param progress
      *        The current progress of the progress bar (percent).
@@ -74,8 +74,8 @@ public class ProgressBar extends GUIelement {
     }
 
     /**
-     * Sets the width of the progress bar in pixels. If not set, it defaults to the default GUI element width, i.e.
-     * approx one sentence.
+     * Sets the width of the progress bar in pixels. If not set, it defaults to the default GUI
+     * element width, i.e. approx one sentence.
      *
      * @param width
      *        The desired width of the progress bar in pixels.
@@ -92,8 +92,8 @@ public class ProgressBar extends GUIelement {
     }
 
     /**
-     * Sets the height of the progress bar in pixels. If not set, it defaults to the default GUI element height, i.e.
-     * approx one line.
+     * Sets the height of the progress bar in pixels. If not set, it defaults to the default GUI
+     * element height, i.e. approx one line.
      *
      * @param height
      *        The desired height of the progress bar in pixels.

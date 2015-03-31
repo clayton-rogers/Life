@@ -5,8 +5,8 @@ import com.gmail.claytonrogers53.life.Util.Log;
 import java.awt.*;
 
 /**
- * An interface used by the graphics system to keep track of all the GUI elements and to call them when a click occurs
- * in their bounds.
+ * An interface used by the graphics system to keep track of all the GUI elements and to call them
+ * when a click occurs in their bounds.
  *
  * Currently available GUI elements are:
  *  - Button - Click to do something.
@@ -54,8 +54,8 @@ abstract class GUIelement {
     }
 
     /**
-     * Returns the upper (top) edge of the element. This will be a numerically smaller value than that returned by
-     * getLowerY().
+     * Returns the upper (top) edge of the element. This will be a numerically smaller value than
+     * that returned by getLowerY().
      *
      * @return Y component of the top edge.
      */
@@ -64,8 +64,8 @@ abstract class GUIelement {
     }
 
     /**
-     * Returns the lower (bottom) edge of the element. This will be numerically larger than the value returned by
-     * getUpperY().
+     * Returns the lower (bottom) edge of the element. This will be numerically larger than the
+     * value returned by getUpperY().
      *
      * @return Y component of the bottom edge.
      */
@@ -92,8 +92,9 @@ abstract class GUIelement {
     }
 
     /**
-     * Sets the position of the GUI element on the screen. NOTE: This position does not include offsets for the window
-     * decorations, thus the point 0,0 will be in the upper left corner behind the title bar window decoration.
+     * Sets the position of the GUI element on the screen. NOTE: This position does not include
+     * offsets for the window decorations, thus the point 0,0 will be in the upper left corner
+     * behind the title bar window decoration.
      *
      * @param xPos
      *        The x position of the GUI element in pixels. Zero is at right side of screen.
@@ -118,8 +119,8 @@ abstract class GUIelement {
     }
 
     /**
-     * When the graphics system determines that the GUI element has been clicked, it will call this method. The
-     * coordinates are the local coordinates within the bounds of the element.
+     * When the graphics system determines that the GUI element has been clicked, it will call this
+     * method. The coordinates are the local coordinates within the bounds of the element.
      *
      * @param localX
      *        The x component of the click location.

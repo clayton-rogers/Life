@@ -25,15 +25,15 @@ public class Collision {
     private Collidable collidee;
     /** The location of the collision in world coordinates. */
     private final Vector2D collisionPoint = new Vector2D();
-    /** A collision object is created when the is a potential collision. If the fine collision detection ends up being
-     * a near miss, then this will be set to false. */
+    /** A collision object is created when the is a potential collision. If the fine collision
+     * detection ends up being a near miss, then this will be set to false. */
     private boolean isCollision;
     /** The time until the next frame. The collision must happen before this time. */
     private final double timeStep;
 
     /**
-     * Create a new potential collision between two objects. Also calculates the exact time of the collision or whether
-     * it is in fact a near miss.
+     * Create a new potential collision between two objects. Also calculates the exact time of the
+     * collision or whether it is in fact a near miss.
      *
      * @param ref1
      *        Reference to the first object.
@@ -68,8 +68,8 @@ public class Collision {
     }
 
     /**
-     * Advances the two objects to the collision point. Calculates the new velocities and angular velocities and then
-     * recalculates the object positions at the end of the frame time.
+     * Advances the two objects to the collision point. Calculates the new velocities and angular
+     * velocities and then recalculates the object positions at the end of the frame time.
      */
     public void resolveCollision() {
         if (!isCollision()) {
@@ -91,7 +91,8 @@ public class Collision {
             // Find the normal of the collision.
             // Find the distance from the collision point to the edge of the object.
 
-            /** This will be the point along the colliderR vector that intersects with the edge of collidee. */
+            /** This will be the point along the colliderR vector that intersects with the edge of
+             * collidee. */
             Vector2D edgePosition = collisionPoint;
             double percentageRight = 1.0;
             double percentageLeft = 0.0;
@@ -140,12 +141,12 @@ public class Collision {
                 normalVector = Vector2D.getVector2DMagnitudeAndDirection(1.0, normalDirection);
 
 
-                // We know the normal axis now, but we must find whether it is in the proper direction, or the opposite
-                // direction.
+                // We know the normal axis now, but we must find whether it is in the proper
+                // direction, or the opposite direction.
                 double dotProduct = normalVector.dotProduct(colliderR.opposite());
-                // If the dot product is negative then it means the normal vector is going in the opposite direction to
-                // the vector that goes from the collision point to the edge point, and therefore we need to flip its
-                // direction.
+                // If the dot product is negative then it means the normal vector is going in the
+                // opposite direction to the vector that goes from the collision point to the edge
+                // point, and therefore we need to flip its direction.
                 if (dotProduct < 0) {
                     normalVector = normalVector.opposite();
                 }
@@ -164,7 +165,8 @@ public class Collision {
             states[0] = objects[0].getNextState();
             states[1] = objects[1].getNextState();
 
-            // For right now we are just going to flip the velocity of both objects along the normal of the collision.
+            // For right now we are just going to flip the velocity of both objects along the
+            // normal of the collision.
             states[0].velocity = states[0].velocity.reflectAlong(normalVector);
             states[1].velocity = states[1].velocity.reflectAlong(normalVector);
             // TODO: actually calculate the collision using:
@@ -182,7 +184,8 @@ public class Collision {
     }
 
     /**
-     * Using the fine collision detection and binary search, this finds the time of the first intersection.
+     * Using the fine collision detection and binary search, this finds the time of the first
+     * intersection.
      */
     private void findCollisionTime() {
 
@@ -201,7 +204,8 @@ public class Collision {
             return;
         }
 
-        // From here, we know that the actually is a collision and we just have to find the actual time of it.
+        // From here, we know that the actually is a collision and we just have to find the actual
+        // time of it.
         double leftEnd = 0.0;
         while (rightEnd - leftEnd > COLLISION_TIME_PRECISION) {
             double centerEnd = (leftEnd + rightEnd) / 2.0;
@@ -212,7 +216,8 @@ public class Collision {
             }
         }
 
-        // We take the time that is just after to collision, so that the two objects are just barely intersecting.
+        // We take the time that is just after to collision, so that the two objects are just
+        // barely intersecting.
         collisionTime = rightEnd;
     }
 

@@ -7,8 +7,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Represents a physical point on a 2D plane. The point can have mass/linear momentum, but does not have a rotation or
- * any other angular properties.
+ * Represents a physical point on a 2D plane. The point can have mass/linear momentum, but does not
+ * have a rotation or any other angular properties.
  *
  * Created by Clayton on 8/12/2014.
  */
@@ -26,14 +26,15 @@ public abstract class PhysicsObject implements Collidable {
     protected boolean isCollisionResolutionEnabled = true;
 
     /**
-     * Creates a new PhysicsObject. This abstract class has everything required to track and propagate linear and
-     * angular momentum.
+     * Creates a new PhysicsObject. This abstract class has everything required to track and
+     * propagate linear and angular momentum.
      *
      * @param mass
      *        The mass (linear inertia) of the point object in kg.
      *
      * @param momentOfInertia
-     *        The moment of inertia of the object around the axis normal to the plane of the screen in kg*m.
+     *        The moment of inertia of the object around the axis normal to the plane of the screen
+     *        in kg*m.
      */
     public PhysicsObject(double mass, double momentOfInertia) {
         this.mass             = mass;

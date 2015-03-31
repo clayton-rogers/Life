@@ -7,8 +7,9 @@ import java.awt.geom.Rectangle2D;
 import java.util.*;
 
 /**
- * A box to contain text. The text box has a fixed width that can be set. It will be automatically sized in the
- * vertical direction to accommodate the contained text. The text and the width can be changed dynamically.
+ * A box to contain text. The text box has a fixed width that can be set. It will be automatically
+ * sized in the vertical direction to accommodate the contained text. The text and the width can be
+ * changed dynamically.
  *
  * Created by Clayton on 25/1/2015.
  */
@@ -37,8 +38,8 @@ public class TextBox extends GUIelement {
     }
 
     /**
-     * Sets the width of the text box. If no width is set on a new text box, the default GUI element width is used,
-     * i.e. one line (200 pixels).
+     * Sets the width of the text box. If no width is set on a new text box, the default GUI
+     * element width is used, i.e. one line (200 pixels).
      *
      * @param width
      *        The desired width of the text box in pixels.
@@ -70,7 +71,8 @@ public class TextBox extends GUIelement {
     }
 
     /**
-     * Draws the text box on screen and reflows the text to fit in the box if the text or the width has changed.
+     * Draws the text box on screen and reflows the text to fit in the box if the text or the width
+     * has changed.
      *
      * @param g2
      *        The graphics parameter.
@@ -160,8 +162,8 @@ public class TextBox extends GUIelement {
     }
 
     /**
-     * Sets the text box to contain the desired string. The height of the box is automatically recalculated to fit the
-     * text.
+     * Sets the text box to contain the desired string. The height of the box is automatically
+     * recalculated to fit the text.
      *
      * @param text
      *        The text to be contained in the box.
@@ -179,8 +181,8 @@ public class TextBox extends GUIelement {
     }
 
     /**
-     * Appends text to the text that is already in the box. The height of the box is automatically recalculated to fit
-     * the text.
+     * Appends text to the text that is already in the box. The height of the box is automatically
+     * recalculated to fit the text.
      *
      * @param text
      *        The text to be appended to the text that is already in the box.

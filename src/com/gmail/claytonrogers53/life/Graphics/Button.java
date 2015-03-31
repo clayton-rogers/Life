@@ -7,9 +7,9 @@ import java.awt.geom.RoundRectangle2D;
 import java.util.concurrent.Callable;
 
 /**
- * A button which can be clicked. The width of the button is auto calculated from the text on the button but the height
- * must be set. The code which is run when the button is clicked needs to be set with the
- * registerCallback() method.
+ * A button which can be clicked. The width of the button is auto calculated from the text on the
+ * button but the height must be set. The code which is run when the button is clicked needs to be
+ * set with the registerCallback() method.
  *
  * Created by Clayton on 30/12/2014.
  */
@@ -24,7 +24,8 @@ public class Button extends GUIelement {
     private int cornerArcRadius = 5;
 
     /**
-     * Sets the text that will be printed on the button. The button width will resize to accommodate the text.
+     * Sets the text that will be printed on the button. The button width will resize to
+     * accommodate the text.
      *
      * @param text
      *        The text on the button.
@@ -43,8 +44,9 @@ public class Button extends GUIelement {
     }
 
     /**
-     * Sets the height of the button. If not set, it will default to the default GUI element height, i.e. approx one
-     * line. Note: The width is calculated automatically using the button text.
+     * Sets the height of the button. If not set, it will default to the default GUI element
+     * height, i.e. approx one line. Note: The width is calculated automatically using the button
+     * text.
      *
      * @param height
      *        The desired height of the button in pixels.
@@ -73,8 +75,8 @@ public class Button extends GUIelement {
     }
 
     /**
-     * Sets the corner arc radius in pixels. This does not generally have to be set as the default of 5 pixels looks
-     * fine is most cases.
+     * Sets the corner arc radius in pixels. This does not generally have to be set as the default
+     * of 5 pixels looks fine is most cases.
      *
      * @param cornerArcRadius
      *        The desired corner arc radius in pixels.
@@ -91,8 +93,8 @@ public class Button extends GUIelement {
     }
 
     /**
-     * This method is called when the button is clicked. If a callback has been registered, then it is called.
-     * Otherwise, the button does nothing.
+     * This method is called when the button is clicked. If a callback has been registered, then it
+     * is called. Otherwise, the button does nothing.
      *
      * @param localX
      *        The x component of the click location.

@@ -9,8 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * A radio box which can be set to one of a number of possibilities. The height is auto calculated based on the number
- * of options and the width is auto calculated based on the length of the longest option.
+ * A radio box which can be set to one of a number of possibilities. The height is auto calculated
+ * based on the number of options and the width is auto calculated based on the length of the
+ * longest option.
  *
  * Created by Clayton on 30/12/2014.
  */
@@ -29,8 +30,8 @@ public class RadioBox extends GUIelement {
     private static final int CHECK_BOX_SIZE = 8;
 
     /**
-     * Sets the list of possible options of the radio box. Must be done at least once for the radio box otherwise it
-     * will not display on screen.
+     * Sets the list of possible options of the radio box. Must be done at least once for the radio
+     * box otherwise it will not display on screen.
      *
      * @param optionList
      *        A list of strings to be used as the options text.
@@ -47,8 +48,8 @@ public class RadioBox extends GUIelement {
     }
 
     /**
-     * Allows a list of the possible options to be queried. If the option list has not yet been populated, then it will
-     * return null.
+     * Allows a list of the possible options to be queried. If the option list has not yet been
+     * populated, then it will return null.
      *
      * @return A string list of the possible options.
      */
@@ -65,7 +66,8 @@ public class RadioBox extends GUIelement {
     /**
      * Allows the text of the currently selected option to be queried.
      *
-     * @return The text of the currently selected option. Returns an empty string if the options have not yet been set.
+     * @return The text of the currently selected option. Returns an empty string if the options
+     *         have not yet been set.
      */
     public String getSelectedOption() {
         synchronized (this) {
@@ -80,8 +82,8 @@ public class RadioBox extends GUIelement {
     /**
      * Allows the currently selected index to be queried.
      *
-     * @return The index of the currently selected option (zero indexed). Returns -1 if the options have not yet been
-     *         set.
+     * @return The index of the currently selected option (zero indexed). Returns -1 if the options
+     *         have not yet been set.
      */
     public int getSelectedOptionIndex() {
         synchronized (this) {
@@ -94,8 +96,8 @@ public class RadioBox extends GUIelement {
     }
 
     /**
-     * Allows the currently selected index to be set externally. Has no effect if the option list does not exist or if
-     * the index argument is out of range.
+     * Allows the currently selected index to be set externally. Has no effect if the option list
+     * does not exist or if the index argument is out of range.
      *
      * @param optionIndex
      *        The index of the option to be selected (zero indexed).
@@ -120,8 +122,8 @@ public class RadioBox extends GUIelement {
     }
 
     /**
-     * Sets the corner arc radius in pixels. This generally does not have to be set as the default value of 5 pixels
-     * looks good in most cases.
+     * Sets the corner arc radius in pixels. This generally does not have to be set as the default
+     * value of 5 pixels looks good in most cases.
      *
      * @param cornerArcRadius
      *        The desired corner arc radius in pixels.
@@ -137,8 +139,9 @@ public class RadioBox extends GUIelement {
     }
 
     /**
-     * Sets the currently selected option when the radio box is clicked. Does not change the selection if the upper or
-     * lower margins are selected. If the option list has not yet been set, then the click will have no effect.
+     * Sets the currently selected option when the radio box is clicked. Does not change the
+     * selection if the upper or lower margins are selected. If the option list has not yet been
+     * set, then the click will have no effect.
      *
      * @param localX
      *        The x component of the click location.
@@ -150,7 +153,8 @@ public class RadioBox extends GUIelement {
     public void clicked(int localX, int localY) {
         synchronized (this) {
             if (textHeight == 0) {
-                // We haven't drawn the box yet and therefore don't know how big anything is. So just drop the click.
+                // We haven't drawn the box yet and therefore don't know how big anything is. So
+                // just drop the click.
                 return;
             }
             if (optionList == null) {
@@ -162,8 +166,8 @@ public class RadioBox extends GUIelement {
             // Since this is int division, it will always properly give the lower bound.
             selectedOptionIndex = (localY-TEXT_MARGIN)/(textHeight+TEXT_MARGIN);
             if (selectedOptionIndex > optionList.size()-1) {
-                // We need this because on the very lowest pixel of the last entry, and the lower margin, it will
-                // otherwise return max+1.
+                // We need this because on the very lowest pixel of the last entry, and the lower
+                // margin, it will otherwise return max+1.
                 selectedOptionIndex = optionList.size()-1;
             }
         }

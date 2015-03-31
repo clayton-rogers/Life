@@ -7,8 +7,8 @@ import java.awt.geom.Rectangle2D;
 import java.awt.geom.RoundRectangle2D;
 
 /**
- * A checkbox which can be toggled. The width is auto calculated from the contents. The height may be set, but defaults
- * to one line.
+ * A checkbox which can be toggled. The width is auto calculated from the contents. The height may
+ * be set, but defaults to one line.
  *
  * Created by Clayton on 30/12/2014.
  */
@@ -24,7 +24,7 @@ public class CheckBox extends GUIelement {
     private static final int CHECK_BOX_SIZE = 8;
 
     /**
-     * Checkboxs have two states as defined by the State class.
+     * Checkboxes have two states as defined by the State class.
      */
     public enum State {
         CHECKED,
@@ -32,7 +32,8 @@ public class CheckBox extends GUIelement {
     }
 
     /**
-     * Sets the text that will be printed on the checkbox. The checkbox width will resize to accommodate the text.
+     * Sets the text that will be printed on the checkbox. The checkbox width will resize to
+     * accommodate the text.
      *
      * @param text
      *        The text on the button.
@@ -51,7 +52,8 @@ public class CheckBox extends GUIelement {
     }
 
     /**
-     * Sets the height of the checkbox. If not set, the height defaults to the default GUI elements height, i.e. approx
+     * Sets the height of the checkbox. If not set, the height defaults to the default GUI elements
+     * height, i.e. approx
      * one line. Note: The width is calculated automatically using the checkbox text.
      *
      * @param height
@@ -69,8 +71,8 @@ public class CheckBox extends GUIelement {
     }
 
     /**
-     * Sets the corner arc radius in pixels. This generally does not have to be set as the default value of 5 pixels
-     * looks good in most circumstances.
+     * Sets the corner arc radius in pixels. This generally does not have to be set as the default
+     * value of 5 pixels looks good in most circumstances.
      *
      * @param cornerArcRadius
      *        The desired corner arc radius in pixels.

@@ -19,7 +19,8 @@ public class Box extends PhysicsObject implements Drawable {
     protected Drawing drawing = new Drawing();
     protected BufferedImage sprite;
 
-    public Box(double mass, double momentOfInertia, Vector2D position, Vector2D velocity, double angle, double angularVelocity) {
+    public Box(double mass, double momentOfInertia, Vector2D position, Vector2D velocity,
+               double angle, double angularVelocity) {
         super(mass, momentOfInertia);
 
         this.state.position = position;

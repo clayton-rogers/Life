@@ -14,8 +14,8 @@ import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
- * The graphics system keeps a list of all of the drawable objects and draws them once per frame. It also insures that a
- * particular (adjustable) frame rate is used.
+ * The graphics system keeps a list of all of the drawable objects and draws them once per frame.
+ * It also insures that a particular (adjustable) frame rate is used.
  *
  * Created by Clayton on 13/11/2014.
  */
@@ -31,9 +31,9 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     private static final int DEFAULT_HEIGHT = 500;
 
     /**
-     * The default window zoom level if one is not specified in the configuration file. A zoom level of 1.0
-     * means that one meter will show up as one pixel. We will typically, use zoom level of higher than 1.0 since most
-     * objects will be smaller than a meter.
+     * The default window zoom level if one is not specified in the configuration file. A zoom
+     * level of 1.0 means that one meter will show up as one pixel. We will typically, use zoom
+     * level of higher than 1.0 since most objects will be smaller than a meter.
      */
     private static final double DEFAULT_ZOOM = 200.0;
 
@@ -45,9 +45,10 @@ public final class GraphicsSystem extends JFrame implements Runnable{
 
     private static final double PAN_SCALE        = 1.0;
     private static final double ZOOM_SCALE       = 1.1;
-    /** Then number of inputs processed in each frame. This needs to be set high enough so that even at a low frame
-     * rate (ex. 10 fps), enough actions per frame will be processed to keep things snappy. Don't want to set it too
-     * large, or the graphics system may lag if it gets flooded with inputs.
+    /** Then number of inputs processed in each frame. This needs to be set high enough so that
+     * even at a low frame rate (ex. 10 fps), enough actions per frame will be processed to keep
+     * things snappy. Don't want to set it too large, or the graphics system may lag if it gets
+     * flooded with inputs.
      */
     private static final int    INPUTS_PER_LOOP  = 75;
 
@@ -76,8 +77,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     private final Queue<InputMessage> inputMessages = new ConcurrentLinkedQueue<>();
 
     /**
-     * Constructs a new runnable GraphicsSystem object. If the window settings are set in the configuration file then they
-     * are read.
+     * Constructs a new runnable GraphicsSystem object. If the window settings are set in the
+     * configuration file then they are read.
      */
     public GraphicsSystem() {
 
@@ -90,8 +91,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
         setSize(width, height);
         setVisible(true);
 
-        // This sleep is here in hopes of stopping the exception that sometimes happens when creating the buffer
-        // strategy later on.
+        // This sleep is here in hopes of stopping the exception that sometimes happens when
+        // creating the buffer strategy later on.
         try {
             Thread.sleep(200L);
         } catch (InterruptedException e) {
@@ -185,8 +186,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
                 if (timeToWait > 0L) {
                     Thread.sleep(timeToWait);
                 } else {
-                    // If the graphics thread is overloaded and never sleeps, we still need to check if we have been
-                    // interrupted so that we will stop when we have.
+                    // If the graphics thread is overloaded and never sleeps, we still need to
+                    // check if we have been interrupted so that we will stop when we have.
                     if (Thread.interrupted()) {
                         Log.warning("Graphics thread should not be interrupted to stop. Use stopDrawing().");
                         stopDrawing();
@@ -221,11 +222,12 @@ public final class GraphicsSystem extends JFrame implements Runnable{
             switch (inputMessage.getMessageType()) {
                 case SCROLL:
                     synchronized (this) {
-                        // Since the pan coordinates are the world coordinates of the centre of the screen,
-                        // when the x is negative, it means the whole screen has moved in the positive x direction.
+                        // Since the pan coordinates are the world coordinates of the centre of the
+                        // screen, when the x is negative, it means the whole screen has moved in
+                        // the positive x direction.
                         panX -= inputMessage.getDataX() * PAN_SCALE / zoom;
-                        // Same message as above for the x, but the y has an additional factor of -1 because the positive
-                        // screen direction is down.
+                        // Same message as above for the x, but the y has an additional factor of
+                        // -1 because the positive screen direction is down.
                         panY += inputMessage.getDataY() * PAN_SCALE / zoom;
                     }
                     break;
@@ -246,7 +248,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Draws the current frame on the back buffer and then shows it to the screen. Called once every draw loop.
+     * Draws the current frame on the back buffer and then shows it to the screen. Called once
+     * every draw loop.
      */
     private void drawScreen () {
 
@@ -265,16 +268,18 @@ public final class GraphicsSystem extends JFrame implements Runnable{
                 g.clearRect(0, 0, width, height);
             }
 
-            // This synchronized section is in effect locking the drawable list, so that it is not changed by another
-            // thread while we are drawing it. In the case where we spend a majority of the time drawing, this could
-            // cause delays when we try to add or remove an object from the draw loop.
+            // This synchronized section is in effect locking the drawable list, so that it is not
+            // changed by another thread while we are drawing it. In the case where we spend a
+            // majority of the time drawing, this could cause delays when we try to add or remove
+            // an object from the draw loop.
             synchronized (drawableList) {
                 Drawing drawing;
                 for (Drawable object : drawableList) {
                     drawing = object.getDrawing();
 
-                    // Because all the screen objects work in a normal coordinate system. i.e. with metres, but java2D
-                    // uses pixels starting in the top left, we must convert the coordinates.
+                    // Because all the screen objects work in a normal coordinate system. i.e. with
+                    // metres, but java2D uses pixels starting in the top left, we must convert
+                    // the coordinates.
                     convertToScreenCoordinates(drawing);
 
                     // Set a transform to use for the drawing
@@ -283,9 +288,10 @@ public final class GraphicsSystem extends JFrame implements Runnable{
                     af.scale(drawing.spriteZoom, drawing.spriteZoom);
                     af.rotate(drawing.rotation);
 
-                    // This translate is to account for the fact that the drawing of the sprite is done from the top
-                    // left corner, rather than the center. Since we want the rotation to be around the center, but
-                    // then we must move the cursor to the corner before we start drawing.
+                    // This translate is to account for the fact that the drawing of the sprite is
+                    // done from the top left corner, rather than the center. Since we want the
+                    // rotation to be around the center, but then we must move the cursor to the
+                    // corner before we start drawing.
                     af.translate(-drawing.sprite.getWidth(null)/2.0, -drawing.sprite.getHeight(null)/2.0);
 
                     g2.drawImage(drawing.sprite, af, null);
@@ -323,23 +329,26 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Considers the current view position and zoom and uses it to convert the drawing into something that can be
-     * drawn. It needs to be synchronized because is reads the pan and zoom.
+     * Considers the current view position and zoom and uses it to convert the drawing into
+     * something that can be drawn. It needs to be synchronized because is reads the pan and zoom.
      *
      * @param inputDrawing
      *        The drawing coming from the drawable object.
      */
     private synchronized void convertToScreenCoordinates (Drawing inputDrawing) {
         synchronized (this) {
-            // This transform runs on every drawable object every graphics loop, so it needs to be kind of fast.
+            // This transform runs on every drawable object every graphics loop, so it needs to be
+            // kind of fast.
 
-            // At a zoom level of 1.0 and zero pan vector, the centre of the screen should be (0 m, 0 m) and a line of 1 m
-            // length should be 1 pixel long.
-            // If the pan is something other than (0 m, 0 m) then that point will be at the centre of the screen.
-            // If the zoom level is something other than 1, then the size in meters of the object will be multiplied by that
-            // to obtain its size in pixels.
+            // At a zoom level of 1.0 and zero pan vector, the centre of the screen should be
+            // (0 m, 0 m) and a line of 1 m length should be 1 pixel long.
+            // If the pan is something other than (0 m, 0 m) then that point will be at the centre
+            // of the screen.
+            // If the zoom level is something other than 1, then the size in meters of the object
+            // will be multiplied by that to obtain its size in pixels.
 
-            // Translate the points by the pan of the screen. (Since the pan is in meters, we do this before the scaling.)
+            // Translate the points by the pan of the screen. (Since the pan is in meters, we do
+            // this before the scaling.)
             inputDrawing.xPosition -= panX;
             inputDrawing.yPosition -= panY;
 
@@ -347,23 +356,26 @@ public final class GraphicsSystem extends JFrame implements Runnable{
             inputDrawing.xPosition *= zoom;
             inputDrawing.yPosition *= zoom;
 
-            // Flip the y and translate the coordinates because on the screen the origin is at the upper left hand corner.
+            // Flip the y and translate the coordinates because on the screen the origin is at the
+            // upper left hand corner.
             inputDrawing.xPosition += width / 2.0;
             inputDrawing.yPosition *= -1.0;
             inputDrawing.yPosition += height / 2.0;
 
-            // We are going to let the drawing transforms actually take care of transforming the sprite. However, we do need
+            // We are going to let the drawing transforms actually take care of transforming the
+            // sprite. However, we do need
             // translate the zoom of the sprite to the zoom of the screen.
             inputDrawing.spriteZoom *= zoom;
 
-            // At the end of this method, the x and y pos of the drawing will be in screen pixel coordinates.
-            // The spriteZoom will be that actual scaling of the sprite from sprite pixels to screen pixels.
+            // At the end of this method, the x and y pos of the drawing will be in screen pixel
+            // coordinates. The spriteZoom will be that actual scaling of the sprite from sprite
+            // pixels to screen pixels.
         }
     }
 
     /**
-     * Allows other threads with a reference to the draw loop to stop it drawing and quit. This is the normal way of
-     * stopping the draw thread when one is done with it.
+     * Allows other threads with a reference to the draw loop to stop it drawing and quit. This is
+     * the normal way of stopping the draw thread when one is done with it.
      */
     public void stopDrawing () {
         // isDrawing is volatile therefore we do not need to obtain a lock here.
@@ -373,9 +385,9 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Allows users to query whether the graphics thread has stopped. The graphics thread will be in the stopped state
-     * when: before it has been started with start(), after it has ended with a call to stopDrawing(), or after it has
-     * stopped due to an interrupt.
+     * Allows users to query whether the graphics thread has stopped. The graphics thread will be
+     * in the stopped state when: before it has been started with start(), after it has ended with
+     * a call to stopDrawing(), or after it has stopped due to an interrupt.
      *
      * @return Whether the graphics system is in the running state.
      */
@@ -384,9 +396,9 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Adds an object to the list of objects to be draw every frame. The object will be draw until it is explicitly
-     * removed with removeFromDrawList or clearDrawList. If the object is already in the draw list, it will not be
-     * added again.
+     * Adds an object to the list of objects to be draw every frame. The object will be draw until
+     * it is explicitly removed with removeFromDrawList or clearDrawList. If the object is already
+     * in the draw list, it will not be added again.
      *
      * @param object
      *        The drawable object to be added to the draw list.
@@ -436,8 +448,9 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Clears every object out of the draw list. This will clear every object off of the screen. This method should be
-     * used very sparingly. However, it will have better performance than calling removeFromDrawList on every object.
+     * Clears every object out of the draw list. This will clear every object off of the screen.
+     * This method should be used very sparingly. However, it will have better performance than
+     * calling removeFromDrawList on every object.
      *
      * @see #removeFromDrawList
      */
@@ -449,8 +462,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Sets the current graphics refresh rate. Note that the dt can be set to 0 ms to have the graphics system run as
-     * fast as it can.
+     * Sets the current graphics refresh rate. Note that the dt can be set to 0 ms to have the
+     * graphics system run as fast as it can.
      *
      * @param graphicsTimeDelta
      *        The desired frame time in ms.
@@ -468,8 +481,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Sets the current graphics refresh rate. As the graphics system only has ms resolution, the max settable fps is
-     * 1000.
+     * Sets the current graphics refresh rate. As the graphics system only has ms resolution, the
+     * max settable fps is 1000.
      *
      * @param fps
      *        The desired frames per second.
@@ -489,8 +502,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Sets the zoom of the current viewing area. A zoom of 1.0 will show a 1 m line as 1 pixel, a zoom of 2.0 will
-     * show a 1 m line as 2 pixels.
+     * Sets the zoom of the current viewing area. A zoom of 1.0 will show a 1 m line as 1 pixel, a
+     * zoom of 2.0 will show a 1 m line as 2 pixels.
      *
      * @param zoom
      *        The desired zoom level.
@@ -572,7 +585,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Called when a click occurs. Checks each GUI element to see whether the click was within its bounds.
+     * Called when a click occurs. Checks each GUI element to see whether the click was within its
+     * bounds.
      *
      * @param xClickPos
      *        The x component of the click location.
@@ -591,8 +605,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Registers a given physics system with the graphics system. Allows the graphics system to query the load of the
-     * physics system.
+     * Registers a given physics system with the graphics system. Allows the graphics system to
+     * query the load of the physics system.
      *
      * @param physicsSystem
      *        The physics system to register.
@@ -602,7 +616,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * The possible type of messages which can be passed from the input handler to the graphics system.
+     * The possible type of messages which can be passed from the input handler to the graphics
+     * system.
      */
     private enum MessageType {
         SCROLL,
@@ -611,8 +626,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     }
 
     /**
-     * Handles the panning, scrolling, and clicking input into the program. Passes the information asynchronously to the
-     * graphics system.
+     * Handles the panning, scrolling, and clicking input into the program. Passes the information
+     * asynchronously to the graphics system.
      *
      * Created by Clayton on 9/12/2014.
      */
@@ -626,8 +641,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
         private final GraphicsSystem graphicsSystem;
 
         /**
-         * Allows the GraphicsSystem to create an instance for itself. It provides a reference to itself so that the input class
-         * can pass the scroll and zoom messages to it.
+         * Allows the GraphicsSystem to create an instance for itself. It provides a reference to
+         * itself so that the input class can pass the scroll and zoom messages to it.
          *
          * @param graphicsSystem
          *        A reference to the creating GraphicsSystem.
@@ -637,7 +652,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
         }
 
         /**
-         * Gets called whenever a mouse button is pressed. We only care about the right click, since it is used to pan.
+         * Gets called whenever a mouse button is pressed. We only care about the right click,
+         * since it is used to pan.
          *
          * @param e
          *        The mouse event.
@@ -686,7 +702,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
         }
 
         /**
-         * Tells the graphics loop that the mouse has been clicked so that it can notify the GUI elements.
+         * Tells the graphics loop that the mouse has been clicked so that it can notify the GUI
+         * elements.
          *
          * @param e
          *        The mouse event.

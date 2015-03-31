@@ -9,8 +9,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Implements the axis aligned bounding box method of collision detection. Uses the X-axis as the primary checking
- * direction, thus objects spread out over the X-axis will cause it to run faster.
+ * Implements the axis aligned bounding box method of collision detection. Uses the X-axis as the
+ * primary checking direction, thus objects spread out over the X-axis will cause it to run faster.
  *
  * Created by Clayton on 25/2/2015.
  */
@@ -51,7 +51,8 @@ class AABBCollision implements CollisionSystem {
          * @param o
          *        The other object.
          *
-         * @return 1, 0, -1 : When this object is greater than, equal to, or less than the other object (respectively).
+         * @return 1, 0, -1 : When this object is greater than, equal to, or less than the other
+         *         object (respectively).
          */
         @Override
         public int compareTo(@NotNull Bound o) {

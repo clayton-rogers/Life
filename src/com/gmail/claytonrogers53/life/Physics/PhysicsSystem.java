@@ -9,9 +9,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * The physics system keeps track of all of the physics objects and updates them once every physics loop. The actual
- * implementation of the physics is left up to the particular physics object. The abstract PhysicsObject implements
- * the basic physics needed by most objects: 2D linear and angular mass, momentum and force handling.
+ * The physics system keeps track of all of the physics objects and updates them once every physics
+ * loop. The actual implementation of the physics is left up to the particular physics object. The
+ * abstract PhysicsObject implements the basic physics needed by most objects: 2D linear and
+ * angular mass, momentum and force handling.
+ *
  * Created by Clayton on 13/11/2014.
  */
 public final class PhysicsSystem implements Runnable {
@@ -36,7 +38,8 @@ public final class PhysicsSystem implements Runnable {
     public double frameTime;
     public double load;
     /** The lists of physics objects that will be calculated every loop */
-    /** The list of non object physics things that need to be calculated every loop. ex. gravity, some game mechanic.*/
+    /** The list of non object physics things that need to be calculated every loop.
+     * ex. gravity, some game mechanic.*/
     private final Collection<PhysicsThing> physicsThings = new ArrayList<>(100);
     /** The list of objects that propagates and can (potentially) collide. */
     private final List<Collidable>         objects       = new ArrayList<>(100);
@@ -44,8 +47,9 @@ public final class PhysicsSystem implements Runnable {
     private final CollisionSystem collisionSystem = new AABBCollision();
 
     /**
-     * Constructs a new physics systems object. The physics system reference should then be given to a new Thread
-     * instance to start it. Physics objects may be added before or after the physics system has started.
+     * Constructs a new physics systems object. The physics system reference should then be given
+     * to a new Thread instance to start it. Physics objects may be added before or after the
+     * physics system has started.
      */
     public PhysicsSystem() {
         physics_dt        = Configuration.getValueInt   ("PHYSICS_DT",    (int)DEFAULT_PHYSICS_DT);
@@ -67,8 +71,8 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Called by the new thread when it is started. Simply starts the physics loop which continues until it is actively
-     * stopped.
+     * Called by the new thread when it is started. Simply starts the physics loop which continues
+     * until it is actively stopped.
      *
      * @see #physicsLoop
      */
@@ -88,28 +92,30 @@ public final class PhysicsSystem implements Runnable {
         while (isPhysicsRunning) {
             final long localPhysics_dt;
             synchronized (this) {
-                // We need to keep the physics dt the same for every physics object, but we don't want to lock
-                // "this" for the entire physics time.
+                // We need to keep the physics dt the same for every physics object, but we don't
+                // want to lock "this" for the entire physics time.
                 localPhysics_dt = physics_dt;
             }
 
-            // If the physics is paused we just want to wait around for a bit, then check again if we are paused or
-            // if the physics has stopped running.
+            // If the physics is paused we just want to wait around for a bit, then check again if
+            // we are paused or if the physics has stopped running.
             if (isPaused) {
                 try {
-                    // Since the default dt will always be something small but reasonable will will use it as our sleep
-                    // time.
+                    // Since the default dt will always be something small but reasonable will will
+                    // use it as our sleep time.
                     Thread.sleep(localPhysics_dt);
                 } catch (InterruptedException e) {
-                    // If something actively interrupts the physics thread, they probably want it to stop.
+                    // If something actively interrupts the physics thread, they probably want it
+                    // to stop.
                     stopPhysics();
                 }
             } else {
 
                 step(localPhysics_dt);
 
-                // After physics calculations have completed, there still may be lots of time left in the frame. So we will
-                // wait until the frame has expired. The time to wait is the time left in the current frame.
+                // After physics calculations have completed, there still may be lots of time left
+                // in the frame. So we will wait until the frame has expired. The time to wait is
+                // the time left in the current frame.
                 long timeToWait;
                 synchronized (this) {
                     timeToWait = (endOfLastLoopTime + (long) (physics_dt / physicsMultiplier)) - System.currentTimeMillis();
@@ -118,8 +124,8 @@ public final class PhysicsSystem implements Runnable {
                     if (timeToWait > 0) {
                         Thread.sleep(timeToWait);
                     } else {
-                        // If the physics thread is overloaded and never sleeps, we still need to check if we have been
-                        // interrupted so that we will stop when we have.
+                        // If the physics thread is overloaded and never sleeps, we still need to
+                        // check if we have been interrupted so that we will stop when we have.
                         if (Thread.interrupted()) {
                             stopPhysics();
                         }
@@ -142,8 +148,8 @@ public final class PhysicsSystem implements Runnable {
 
 
     /**
-     * Steps the physics forwards by a given time step. This is automatically called every physics loop, but can also
-     * be manually called.
+     * Steps the physics forwards by a given time step. This is automatically called every physics
+     * loop, but can also be manually called.
      *
      * @param stepPhysics_dt
      *        The length of the physics time step (ms).
@@ -223,7 +229,8 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Allows users to stop the physics system. This is the normal way of stopping the physics system.
+     * Allows users to stop the physics system. This is the normal way of stopping the physics
+     * system.
      */
     public void stopPhysics () {
         isPhysicsRunning = false;
@@ -231,9 +238,10 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Allows users to query whether the physics thread has stopped. The physics may be in the stopped state: before
-     * the physics thread has been started with start(), after the physics thread has ended through a call to
-     * stopPhysics(), or after the physics thread has stopped due to an interrupt.
+     * Allows users to query whether the physics thread has stopped. The physics may be in the
+     * stopped state: before the physics thread has been started with start(), after the physics
+     * thread has ended through a call to stopPhysics(), or after the physics thread has stopped
+     * due to an interrupt.
      *
      * @return Whether the physics system is in the running state.
      */
@@ -242,11 +250,13 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Adds an objects to the physics thing calculation list. The object will continue being calculated until it is
-     * removed from the physics thing list with removePhysicsThing or the physics list is cleared with
-     * clearPhysicsThings. If an object is already in the physics thing list, it will be ignored.
+     * Adds an objects to the physics thing calculation list. The object will continue being
+     * calculated until it is removed from the physics thing list with removePhysicsThing or the
+     * physics list is cleared with clearPhysicsThings. If an object is already in the physics
+     * thing list, it will be ignored.
      *
-     * Physics things should be used for non object things which need to be calculated every time step.
+     * Physics things should be used for non object things which need to be calculated every time
+     * step.
      *
      * @param object
      *        The physics thing to be added to the list.
@@ -295,9 +305,9 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Clears every object out of the physics thing list. This method should generally not be used unless you really
-     * want all the physics things to stop simulating (and potentially add new ones). It will have better performance
-     * than calling removePhysicsThing on every object.
+     * Clears every object out of the physics thing list. This method should generally not be used
+     * unless you really want all the physics things to stop simulating (and potentially add new
+     * ones). It will have better performance than calling removePhysicsThing on every object.
      *
      * @see #removePhysicsThing
      */
@@ -357,9 +367,9 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Clears every object out of the physics list. This method should generally not be used unless you really
-     * want all the objects to stop simulating (and potentially add new ones). It will have better performance
-     * than calling removeObject on every object.
+     * Clears every object out of the physics list. This method should generally not be used unless
+     * you really want all the objects to stop simulating (and potentially add new ones). It will
+     * have better performance than calling removeObject on every object.
      *
      */
     public void clearObjects() {
@@ -370,9 +380,9 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Allows users to pause the simulation temporarily. The simulation can be restarted with continuePhysics. If one
-     * wishes to completely stop the physics thread, they should call the stopPhysics method. If the physics is already
-     * paused, this method does nothing.
+     * Allows users to pause the simulation temporarily. The simulation can be restarted with
+     * continuePhysics. If one wishes to completely stop the physics thread, they should call the
+     * stopPhysics method. If the physics is already paused, this method does nothing.
      *
      * @see #continuePhysics
      * @see #stopPhysics
@@ -383,8 +393,8 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Allows users to continue the physics simulation after it was paused with pausePhysics. If the physics is already
-     * running, this method does nothing.
+     * Allows users to continue the physics simulation after it was paused with pausePhysics. If
+     * the physics is already running, this method does nothing.
      *
      * @see #pausePhysics
      */
@@ -394,9 +404,10 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Sets the current physics time delta per physics step. There is generally no need to adjust this value. Setting
-     * this to a smaller value will generally give a more accurate physics simulation at the expense of CPU time. If
-     * this is set too small, there may be extra errors due to rounding.
+     * Sets the current physics time delta per physics step. There is generally no need to adjust
+     * this value. Setting this to a smaller value will generally give a more accurate physics
+     * simulation at the expense of CPU time. If this is set too small, there may be extra errors
+     * due to rounding.
      *
      * @param dt_millis
      *        The desired time per physics frame.
@@ -421,11 +432,12 @@ public final class PhysicsSystem implements Runnable {
     }
 
     /**
-     * Allows the user to set the physics multiplier. A physics multiplier of 1.0 means the physics will run in real
-     * time. A physics multiplier of 10 and a physics_dt of 10 ms means that the physics system will attempt to
-     * perform 10 steps of physics (each 10 ms simulated) in 10 ms of real time. Setting the physics multiplier to a
-     * value higher than the physics_dt (ex. 30x) will cause the physics to run as fast as possible. Note that the
-     * virtual time between integrated physics time steps will still be physics_dt.
+     * Allows the user to set the physics multiplier. A physics multiplier of 1.0 means the physics
+     * will run in real time. A physics multiplier of 10 and a physics_dt of 10 ms means that the
+     * physics system will attempt to perform 10 steps of physics (each 10 ms simulated) in 10 ms
+     * of real time. Setting the physics multiplier to a value higher than the physics_dt (ex. 30x)
+     * will cause the physics to run as fast as possible. Note that the virtual time between
+     * integrated physics time steps will still be physics_dt.
      *
      * @param physicsMultiplier
      *        The desired physics multiplier.
