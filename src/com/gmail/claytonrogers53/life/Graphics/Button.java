@@ -48,6 +48,9 @@ public class Button extends GUIelement {
      * height, i.e. approx one line. Note: The width is calculated automatically using the button
      * text.
      *
+     * The minimum height is 10 pixels. If an attempt is made to set it lower then a warning will
+     * be logged and the height will be unaffected.
+     *
      * @param height
      *        The desired height of the button in pixels.
      */

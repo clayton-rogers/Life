@@ -53,8 +53,11 @@ public class CheckBox extends GUIelement {
 
     /**
      * Sets the height of the checkbox. If not set, the height defaults to the default GUI elements
-     * height, i.e. approx
-     * one line. Note: The width is calculated automatically using the checkbox text.
+     * height, i.e. approx one line. Note: The width is calculated automatically using the checkbox
+     * text.
+     *
+     * The minimum height is 10 pixels. If an attempt is made to set it lower then a warning will
+     * be logged and the height will be unaffected.
      *
      * @param height
      *        The desired height of the button in pixels.
