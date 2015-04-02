@@ -209,22 +209,4 @@ public class TextBox extends GUIelement {
             return text;
         }
     }
-
-    /**
-     * Allows the printing of the contents of the text box class.
-     *
-     * @return A string representation of the class.
-     */
-    @Override
-    public String toString() {
-        synchronized (this) {
-            return "TextBox{" +
-                    "text='" + text + '\'' +
-                    ", updateHeight=" + updateHeight +
-                    ", textInLines=" + textInLines +
-                    ", lineHeight=" + lineHeight +
-                    ", textWidth=" + textWidth +
-                    '}';
-        }
-    }
 }

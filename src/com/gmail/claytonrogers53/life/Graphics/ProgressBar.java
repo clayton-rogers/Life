@@ -52,8 +52,8 @@ public class ProgressBar extends GUIelement {
     }
 
     /**
-     * Sets the current progress of the progress bar. Does not have to always increase. Should be a
-     * value between 0 and 100.
+     * Sets the current progress of the progress bar. Does not have to always increase. Giving a
+     * value outside the 0 to 100 range will not change the current progress.
      *
      * @param progress
      *        The current progress of the progress bar (percent).
@@ -106,20 +106,6 @@ public class ProgressBar extends GUIelement {
 
         synchronized (this) {
             this.height = height;
-        }
-    }
-
-    /**
-     * Allows the contents of the progress bar to be printed.
-     *
-     * @return A string representation of the progress bar.
-     */
-    @Override
-    public String toString() {
-        synchronized (this) {
-            return "ProgressBar{" +
-                    "progress=" + progress +
-                    '}';
         }
     }
 }

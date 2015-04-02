@@ -228,21 +228,4 @@ public class RadioBox extends GUIelement {
             }
         }
     }
-
-    /**
-     * Allows the radio box to be printed.
-     *
-     * @return A string representation of the radio box.
-     */
-    @Override
-    public String toString() {
-        synchronized (this) {
-            return "RadioBox{" +
-                    "textHeight=" + textHeight +
-                    ", optionList=" + optionList +
-                    ", selectedOptionIndex=" + selectedOptionIndex +
-                    ", cornerArcRadius=" + cornerArcRadius +
-                    '}';
-        }
-    }
 }

@@ -149,22 +149,4 @@ public class Button extends GUIelement {
             g2.drawString(buttonText, xPos + TEXT_MARGIN, yPos + (height / 2) + (textHeight / 2));
         }
     }
-
-    /**
-     * Allows the information in the button to be printed.
-     *
-     * @return A string representation of the button.
-     */
-    @Override
-    public String toString() {
-        synchronized (this) {
-            return "Button{" +
-                    "textHeight=" + textHeight +
-                    ", textWidth=" + textWidth +
-                    ", callback=" + callback +
-                    ", buttonText='" + buttonText + '\'' +
-                    ", cornerArcRadius=" + cornerArcRadius +
-                    '}';
-        }
-    }
 }

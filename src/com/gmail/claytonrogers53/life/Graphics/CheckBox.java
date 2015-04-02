@@ -166,22 +166,4 @@ public class CheckBox extends GUIelement {
             }
         }
     }
-
-    /**
-     * Allows the information in the checkbox to be printed.
-     *
-     * @return A string representation of the checkbox.
-     */
-    @Override
-    public String toString() {
-        synchronized (this) {
-            return "CheckBox{" +
-                    "checkBoxText='" + checkBoxText + '\'' +
-                    ", cornerArcRadius=" + cornerArcRadius +
-                    ", state=" + state +
-                    ", textWidth=" + textWidth +
-                    ", textHeight=" + textHeight +
-                    '}';
-        }
-    }
 }
