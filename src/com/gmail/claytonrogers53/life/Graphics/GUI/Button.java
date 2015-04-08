@@ -13,7 +13,7 @@ import java.util.concurrent.Callable;
  *
  * Created by Clayton on 30/12/2014.
  */
-public class Button extends GUIelement {
+public class Button extends GUIElement {
 
     private int textHeight = 0;
     private int textWidth = 0;

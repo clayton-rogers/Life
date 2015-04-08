@@ -15,7 +15,7 @@ import java.util.List;
  *
  * Created by Clayton on 30/12/2014.
  */
-public class RadioBox extends GUIelement {
+public class RadioBox extends GUIElement {
 
     /** The height of a single row. Set to zero when the box size need to be recalculated. */
     private int textHeight = 0;

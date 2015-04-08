@@ -1,6 +1,6 @@
 package com.gmail.claytonrogers53.life.Graphics;
 
-import com.gmail.claytonrogers53.life.Graphics.GUI.GUIelement;
+import com.gmail.claytonrogers53.life.Graphics.GUI.GUIElement;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
 import com.gmail.claytonrogers53.life.Util.Configuration;
 import com.gmail.claytonrogers53.life.Util.Log;
@@ -73,7 +73,7 @@ public final class GraphicsSystem extends JFrame implements Runnable{
     /** The list of objects that will be drawn every loop */
     private final Collection<Drawable> drawableList = new ArrayList<>(40);
     /** The list of all GUI objects on the screen (i.e. objects which do not pan and zoom). */
-    private final Collection<GUIelement> GUIelementList = new ArrayList<>(40);
+    private final Collection<GUIElement> GUIElementList = new ArrayList<>(40);
     /** The list of inputs to be processed. */
     private final Queue<InputMessage> inputMessages = new ConcurrentLinkedQueue<>();
 
@@ -299,8 +299,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
                 }
             }
 
-            synchronized (GUIelementList) {
-                for (GUIelement e : GUIelementList) {
+            synchronized (GUIElementList) {
+                for (GUIElement e : GUIElementList) {
                     e.draw(g2);
                 }
             }
@@ -550,13 +550,13 @@ public final class GraphicsSystem extends JFrame implements Runnable{
      * @param e
      *        The element to be added.
      */
-    public void addGUIElement (GUIelement e) {
+    public void addGUIElement (GUIElement e) {
         if (e == null) {
             Log.warning("Attempted to add a null GUI element list.");
             return;
         }
-        synchronized (GUIelementList) {
-            GUIelementList.add(e);
+        synchronized (GUIElementList) {
+            GUIElementList.add(e);
         }
     }
 
@@ -566,13 +566,13 @@ public final class GraphicsSystem extends JFrame implements Runnable{
      * @param e
      *        The element to be removed.
      */
-    public void removeGUIElement (GUIelement e) {
+    public void removeGUIElement (GUIElement e) {
         if (e == null) {
             Log.warning("Attempted to add a null GUI element.");
             return;
         }
-        synchronized (GUIelementList) {
-            GUIelementList.remove(e);
+        synchronized (GUIElementList) {
+            GUIElementList.remove(e);
         }
     }
 
@@ -580,8 +580,8 @@ public final class GraphicsSystem extends JFrame implements Runnable{
      * Clears every element out of the GUI element list.
      */
     public void clearGUIElementList () {
-        synchronized (GUIelementList) {
-            GUIelementList.clear();
+        synchronized (GUIElementList) {
+            GUIElementList.clear();
         }
     }
 
@@ -596,10 +596,10 @@ public final class GraphicsSystem extends JFrame implements Runnable{
      *        The y component of the click location.
      */
     void notifyGUIElementsOfClick (int xClickPos, int yClickPos) {
-        synchronized (GUIelementList) {
-            for (GUIelement guiElement : GUIelementList) {
-                if (guiElement.isWithinBounds(xClickPos, yClickPos)) {
-                    guiElement.clicked(xClickPos-guiElement.getLowerX(), yClickPos-guiElement.getUpperY());
+        synchronized (GUIElementList) {
+            for (GUIElement GUIElement : GUIElementList) {
+                if (GUIElement.isWithinBounds(xClickPos, yClickPos)) {
+                    GUIElement.clicked(xClickPos- GUIElement.getLowerX(), yClickPos- GUIElement.getUpperY());
                 }
             }
         }

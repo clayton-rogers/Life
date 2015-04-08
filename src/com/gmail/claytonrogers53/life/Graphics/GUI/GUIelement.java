@@ -18,7 +18,7 @@ import java.awt.*;
  *
  * Created by Clayton on 30/12/2014.
  */
-public abstract class GUIelement {
+public abstract class GUIElement {
 
     /** The x position of the GUI element. */
     protected int xPos = 0;

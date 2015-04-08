@@ -13,7 +13,7 @@ import java.util.*;
  *
  * Created by Clayton on 25/1/2015.
  */
-public class TextBox extends GUIelement {
+public class TextBox extends GUIElement {
 
     /** The text contained in the text box. */
     protected String text;

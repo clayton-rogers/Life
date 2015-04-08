@@ -12,7 +12,7 @@ import java.awt.geom.RoundRectangle2D;
  *
  * Created by Clayton on 30/12/2014.
  */
-public class CheckBox extends GUIelement {
+public class CheckBox extends GUIElement {
 
     private int textHeight = 0;
     private int textWidth = 0;

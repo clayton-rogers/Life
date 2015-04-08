@@ -10,7 +10,7 @@ import java.awt.geom.Rectangle2D;
  *
  * Created by Clayton on 25/1/2015.
  */
-public class ProgressBar extends GUIelement {
+public class ProgressBar extends GUIElement {
 
     /** The progress location of the progress bar. Goes zero to PROGRESS_MAX_PERCENT. */
     private int progress = 0;
