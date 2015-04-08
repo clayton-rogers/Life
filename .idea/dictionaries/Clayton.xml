@@ -2,6 +2,7 @@
   <dictionary name="Clayton">
     <words>
       <w>collidable</w>
+      <w>resizes</w>
       <w>struct</w>
       <w>unpausing</w>
     </words>

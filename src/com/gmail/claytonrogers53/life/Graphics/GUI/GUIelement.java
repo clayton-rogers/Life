@@ -1,4 +1,4 @@
-package com.gmail.claytonrogers53.life.Graphics;
+package com.gmail.claytonrogers53.life.Graphics.GUI;
 
 import com.gmail.claytonrogers53.life.Util.Log;
 
@@ -18,7 +18,7 @@ import java.awt.*;
  *
  * Created by Clayton on 30/12/2014.
  */
-abstract class GUIelement {
+public abstract class GUIelement {
 
     /** The x position of the GUI element. */
     protected int xPos = 0;
@@ -128,7 +128,7 @@ abstract class GUIelement {
      * @param localY
      *        The y component of the click location.
      */
-    abstract void clicked (int localX, int localY);
+    public abstract void clicked (int localX, int localY);
 
 
     /**
@@ -137,5 +137,5 @@ abstract class GUIelement {
      * @param g2
      *        The graphics parameter.
      */
-    abstract void draw(Graphics2D g2);
+    public abstract void draw(Graphics2D g2);
 }

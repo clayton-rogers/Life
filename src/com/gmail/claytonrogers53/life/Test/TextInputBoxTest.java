@@ -1,6 +1,8 @@
 package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
+import com.gmail.claytonrogers53.life.Graphics.GUI.TextBox;
+import com.gmail.claytonrogers53.life.Graphics.GUI.TextInputBox;
 import com.gmail.claytonrogers53.life.Util.Configuration;
 import com.gmail.claytonrogers53.life.Graphics.*;
 import com.gmail.claytonrogers53.life.Util.Log;

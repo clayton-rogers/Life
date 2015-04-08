@@ -1,4 +1,4 @@
-package com.gmail.claytonrogers53.life.Graphics;
+package com.gmail.claytonrogers53.life.Graphics.GUI;
 
 import com.gmail.claytonrogers53.life.Util.Log;
 
@@ -27,7 +27,7 @@ public class ProgressBar extends GUIelement {
      *        The y component of the click location.
      */
     @Override
-    void clicked(int localX, int localY) {
+    public void clicked(int localX, int localY) {
         // Do nothing.
     }
 
@@ -38,7 +38,7 @@ public class ProgressBar extends GUIelement {
      *        The graphics object.
      */
     @Override
-    void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2) {
         synchronized (this) {
             // Draw the white background, then the outline, then the solid black part.
             g2.setColor(Color.WHITE);

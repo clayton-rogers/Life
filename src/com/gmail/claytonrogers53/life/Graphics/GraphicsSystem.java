@@ -1,5 +1,6 @@
 package com.gmail.claytonrogers53.life.Graphics;
 
+import com.gmail.claytonrogers53.life.Graphics.GUI.GUIelement;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;
 import com.gmail.claytonrogers53.life.Util.Configuration;
 import com.gmail.claytonrogers53.life.Util.Log;

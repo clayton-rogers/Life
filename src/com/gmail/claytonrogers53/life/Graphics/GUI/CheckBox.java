@@ -1,4 +1,4 @@
-package com.gmail.claytonrogers53.life.Graphics;
+package com.gmail.claytonrogers53.life.Graphics.GUI;
 
 import com.gmail.claytonrogers53.life.Util.Log;
 

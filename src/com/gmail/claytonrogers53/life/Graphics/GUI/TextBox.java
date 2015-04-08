@@ -1,4 +1,4 @@
-package com.gmail.claytonrogers53.life.Graphics;
+package com.gmail.claytonrogers53.life.Graphics.GUI;
 
 import com.gmail.claytonrogers53.life.Util.Log;
 
@@ -66,7 +66,7 @@ public class TextBox extends GUIelement {
      *        The y component of the click location.
      */
     @Override
-    void clicked(int localX, int localY) {
+    public void clicked(int localX, int localY) {
         // Do nothing.
     }
 
@@ -78,7 +78,7 @@ public class TextBox extends GUIelement {
      *        The graphics parameter.
      */
     @Override
-    void draw(Graphics2D g2) {
+    public void draw(Graphics2D g2) {
         synchronized (this) {
             // Reflow the text if required.
             if (updateHeight) {

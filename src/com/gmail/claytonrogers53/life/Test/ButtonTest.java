@@ -2,7 +2,7 @@ package com.gmail.claytonrogers53.life.Test;
 
 import com.gmail.claytonrogers53.life.Box;
 import com.gmail.claytonrogers53.life.Util.Configuration;
-import com.gmail.claytonrogers53.life.Graphics.Button;
+import com.gmail.claytonrogers53.life.Graphics.GUI.Button;
 import com.gmail.claytonrogers53.life.Graphics.GraphicsSystem;
 import com.gmail.claytonrogers53.life.Util.Log;
 import com.gmail.claytonrogers53.life.Physics.PhysicsSystem;

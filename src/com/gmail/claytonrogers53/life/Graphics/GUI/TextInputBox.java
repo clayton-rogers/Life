@@ -1,4 +1,4 @@
-package com.gmail.claytonrogers53.life.Graphics;
+package com.gmail.claytonrogers53.life.Graphics.GUI;
 
 import javax.swing.*;
 
@@ -22,7 +22,7 @@ public class TextInputBox extends TextBox {
      *        The y component of the click location. (Not used.)
      */
     @Override
-    void clicked(int localX, int localY) {
+    public void clicked(int localX, int localY) {
         super.clicked(localX, localY);
 
         String localText =
