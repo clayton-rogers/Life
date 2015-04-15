@@ -51,8 +51,10 @@ public class TextBox extends GUIElement {
         }
 
         synchronized (this) {
-            this.width = width;
-            updateHeight = true;
+            if (this.width != width) {
+                this.width = width;
+                updateHeight = true;
+            }
         }
     }
 
